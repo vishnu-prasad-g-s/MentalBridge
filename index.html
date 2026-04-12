@@ -1,550 +1,773 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MentalBridge</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #f0ebe3;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    .app {
-      width: 100%;
-      max-width: 420px;
-      height: 100vh;
-      background: #faf7f2;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 0 40px rgba(0,0,0,0.08);
-    }
-
-    .header {
-      padding: 20px 24px 16px;
-      background: #faf7f2;
-      border-bottom: 1px solid #ede8e0;
-    }
-
-    .header-top {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 4px;
-    }
-
-    .logo {
-      width: 38px;
-      height: 38px;
-      background: #6b5ea8;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 18px;
-    }
-
-    .header-text h1 {
-      font-size: 17px;
-      font-weight: 600;
-      color: #2d2640;
-    }
-
-    .header-text p {
-      font-size: 12px;
-      color: #9b8fa8;
-    }
-
-    .status {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11px;
-      color: #7a9e7e;
-      margin-top: 8px;
-    }
-
-    .status-dot {
-      width: 7px;
-      height: 7px;
-      background: #7a9e7e;
-      border-radius: 50%;
-    }
-
-    .lang-bar {
-      display: flex;
-      gap: 8px;
-      padding: 10px 24px;
-      background: #faf7f2;
-      border-bottom: 1px solid #ede8e0;
-    }
-
-    .lang-btn {
-      padding: 4px 14px;
-      border-radius: 99px;
-      border: 1px solid #d4cce8;
-      background: transparent;
-      font-size: 12px;
-      color: #6b5ea8;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .lang-btn.active {
-      background: #6b5ea8;
-      color: white;
-      border-color: #6b5ea8;
-    }
-
-    .messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .welcome {
-      text-align: center;
-      padding: 32px 16px;
-      color: #9b8fa8;
-    }
-
-    .welcome .icon {
-      font-size: 40px;
-      margin-bottom: 12px;
-    }
-
-    .welcome h2 {
-      font-size: 18px;
-      font-weight: 600;
-      color: #2d2640;
-      margin-bottom: 8px;
-    }
-
-    .welcome p {
-      font-size: 13px;
-      line-height: 1.6;
-      color: #9b8fa8;
-    }
-
-    .msg {
-      display: flex;
-      flex-direction: column;
-      max-width: 82%;
-    }
-
-    .msg.user { align-self: flex-end; align-items: flex-end; }
-    .msg.bot  { align-self: flex-start; align-items: flex-start; }
-
-    .bubble {
-      padding: 12px 16px;
-      border-radius: 18px;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    .msg.user .bubble {
-      background: #6b5ea8;
-      color: white;
-      border-bottom-right-radius: 4px;
-    }
-
-    .msg.bot .bubble {
-      background: white;
-      color: #2d2640;
-      border-bottom-left-radius: 4px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-    }
-
-    .msg-time {
-      font-size: 10px;
-      color: #c4b8d4;
-      margin-top: 4px;
-      padding: 0 4px;
-    }
-
-    .typing .bubble {
-      background: white;
-      padding: 14px 18px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-    }
-
-    .typing-dots {
-      display: flex;
-      gap: 4px;
-      align-items: center;
-    }
-
-    .typing-dots span {
-      width: 7px;
-      height: 7px;
-      background: #c4b8d4;
-      border-radius: 50%;
-      animation: bounce 1.2s infinite;
-    }
-
-    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
-    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes bounce {
-      0%, 60%, 100% { transform: translateY(0); }
-      30% { transform: translateY(-6px); }
-    }
-
-    .crisis-banner {
-      display: none;
-      margin: 0 16px;
-      padding: 12px 16px;
-      background: #fff3f3;
-      border: 1px solid #f5c2c2;
-      border-radius: 12px;
-      font-size: 12px;
-      color: #a03030;
-      line-height: 1.6;
-    }
-
-    .crisis-banner.show { display: block; }
-
-    .crisis-banner strong {
-      display: block;
-      margin-bottom: 4px;
-      font-size: 13px;
-    }
-
-    .crisis-banner a { color: #a03030; font-weight: 600; }
-
-    .input-area {
-      padding: 12px 16px 24px;
-      background: #faf7f2;
-      border-top: 1px solid #ede8e0;
-    }
-
-    .input-row {
-      display: flex;
-      gap: 10px;
-      align-items: flex-end;
-    }
-
-    textarea {
-      flex: 1;
-      padding: 12px 16px;
-      border: 1.5px solid #d4cce8;
-      border-radius: 24px;
-      background: white;
-      font-size: 14px;
-      color: #2d2640;
-      resize: none;
-      outline: none;
-      font-family: inherit;
-      line-height: 1.5;
-      max-height: 120px;
-      min-height: 48px;
-      transition: border-color 0.2s;
-    }
-
-    textarea:focus { border-color: #6b5ea8; }
-    textarea::placeholder { color: #c4b8d4; }
-
-    .send-btn {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: #6b5ea8;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: background 0.2s;
-    }
-
-    .send-btn:hover { background: #5a4d96; }
-    .send-btn:disabled { background: #d4cce8; cursor: not-allowed; }
-
-    .send-btn svg {
-      width: 20px;
-      height: 20px;
-      fill: white;
-    }
-
-    .disclaimer {
-      text-align: center;
-      font-size: 10px;
-      color: #c4b8d4;
-      margin-top: 8px;
-    }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no"/>
+<title>MentalBridge</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#F5F6FA; --surface:#FFF; --surface2:#F0F1F7;
+  --nav:#111; --border:rgba(0,0,0,.07);
+  --primary:#3CB371; --pd:#2A8C57; --pl:#E6F7EE;
+  --mint:#A8EDD4; --pink:#FFAEC0; --purple:#C2B5FF; --amber:#FFD27F;
+  --text:#111; --t2:#666; --t3:#AAA;
+  --cr:#E53935; --crb:#FFF0F0;
+  --rxl:28px; --rlg:20px; --rmd:14px; --rsm:10px;
+  --sh:0 4px 24px rgba(0,0,0,.08); --sh2:0 2px 12px rgba(0,0,0,.05);
+}
+body{font-family:'Nunito',sans-serif;background:#DDE0EA;display:flex;justify-content:center;align-items:center;min-height:100vh;}
+#app{width:100%;max-width:430px;height:100vh;background:var(--bg);display:flex;flex-direction:column;position:relative;overflow:hidden;box-shadow:0 0 80px rgba(0,0,0,.2);}
+.screen{display:none;flex-direction:column;height:100%;animation:fadeUp .28s ease;}
+.screen.active{display:flex;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.nav{display:flex;background:var(--nav);padding:10px 4px 20px;flex-shrink:0;border-radius:22px 22px 0 0;}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;cursor:pointer;padding:5px 2px;transition:all .2s;}
+.ni{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .22s;}
+.nl{font-size:10px;color:#555;font-weight:700;transition:color .2s;}
+.nb.on .ni{background:var(--primary);transform:scale(1.06);}
+.nb.on .nl{color:#fff;}
+.hdr{padding:16px 20px 13px;background:var(--surface);border-bottom:1.5px solid var(--border);flex-shrink:0;}
+.hdr-r{display:flex;align-items:center;justify-content:space-between;}
+.bmark{width:38px;height:38px;border-radius:14px;background:linear-gradient(135deg,var(--primary),#60E090);display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 4px 14px rgba(60,179,113,.35);flex-shrink:0;}
+.btitle{font-size:18px;font-weight:900;color:var(--text);letter-spacing:-.02em;}
+.bsub{font-size:11px;color:var(--t3);font-weight:700;margin-top:1px;}
+.pill{display:flex;align-items:center;gap:5px;background:var(--pl);padding:5px 12px;border-radius:99px;font-size:11px;color:var(--primary);font-weight:800;}
+.dot-live{width:7px;height:7px;background:var(--primary);border-radius:50%;animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.s-inner{flex:1;overflow-y:auto;padding:20px;}
+.s-inner::-webkit-scrollbar{display:none;}
+.lstrip{display:flex;gap:6px;padding:10px 16px;background:var(--surface);border-bottom:1.5px solid var(--border);overflow-x:auto;flex-shrink:0;}
+.lstrip::-webkit-scrollbar{display:none;}
+.lbtn{padding:6px 16px;border-radius:99px;border:1.5px solid var(--border);background:var(--surface);font-size:12px;font-weight:700;color:var(--t2);cursor:pointer;white-space:nowrap;transition:all .2s;font-family:'Nunito',sans-serif;}
+.lbtn.on{background:var(--primary);color:#fff;border-color:var(--primary);}
+.msgs{flex:1;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth;}
+.msgs::-webkit-scrollbar{display:none;}
+.wblob{background:linear-gradient(135deg,var(--primary) 0%,#52D68A 100%);border-radius:var(--rxl);padding:26px 22px;color:#fff;text-align:center;margin-bottom:4px;}
+.wbf{font-size:40px;margin-bottom:10px;}
+.wbt{font-size:22px;font-weight:900;letter-spacing:-.03em;margin-bottom:8px;}
+.wbs{font-size:13px;opacity:.85;line-height:1.65;font-weight:600;}
+.qpl{font-size:11px;font-weight:800;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;}
+.qpb{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rlg);padding:13px 16px;font-size:13.5px;color:var(--t2);cursor:pointer;text-align:left;font-family:'Nunito',sans-serif;font-weight:600;transition:all .2s;line-height:1.45;box-shadow:var(--sh2);margin-bottom:8px;display:block;width:100%;}
+.qpb:hover{border-color:var(--primary);color:var(--primary);background:var(--pl);}
+.msg{display:flex;flex-direction:column;max-width:82%;}
+.msg.u{align-self:flex-end;align-items:flex-end;}
+.msg.b{align-self:flex-start;align-items:flex-start;}
+.bubble{padding:12px 16px;border-radius:20px;font-size:14px;line-height:1.65;font-weight:500;}
+.msg.u .bubble{background:var(--primary);color:#fff;border-bottom-right-radius:5px;}
+.msg.b .bubble{background:var(--surface);color:var(--text);border-bottom-left-radius:5px;border:1.5px solid var(--border);box-shadow:var(--sh2);}
+.mt{font-size:10px;color:var(--t3);margin-top:4px;padding:0 4px;font-weight:600;}
+.tbub-wrap{background:var(--surface);border:1.5px solid var(--border);border-radius:20px;border-bottom-left-radius:5px;padding:14px 18px;box-shadow:var(--sh2);}
+.tdots{display:flex;gap:4px;align-items:center;}
+.tdots span{width:7px;height:7px;background:var(--t3);border-radius:50%;animation:td 1.2s infinite;}
+.tdots span:nth-child(2){animation-delay:.2s;}.tdots span:nth-child(3){animation-delay:.4s;}
+@keyframes td{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-7px)}}
+.cbar{display:none;margin:0 14px 10px;padding:13px 16px;background:var(--crb);border:1.5px solid #FFCDD2;border-radius:var(--rlg);font-size:12.5px;color:var(--cr);line-height:1.6;font-weight:600;flex-shrink:0;}
+.cbar.on{display:block;}
+.cbar strong{display:block;font-size:13px;margin-bottom:4px;font-weight:800;}
+.cbar a{color:var(--cr);font-weight:800;text-decoration:none;}
+.inzone{padding:12px 14px 14px;background:var(--surface);border-top:1.5px solid var(--border);flex-shrink:0;}
+.inrow{display:flex;gap:10px;align-items:flex-end;}
+#ci{flex:1;padding:12px 16px;border:1.5px solid var(--border);border-radius:22px;background:var(--surface2);font-size:14px;color:var(--text);resize:none;outline:none;font-family:'Nunito',sans-serif;font-weight:600;line-height:1.5;max-height:100px;min-height:46px;transition:all .2s;}
+#ci:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(60,179,113,.1);}
+#ci::placeholder{color:var(--t3);}
+.sbtn{width:46px;height:46px;border-radius:50%;background:var(--primary);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;box-shadow:0 4px 14px rgba(60,179,113,.4);}
+.sbtn:hover{background:var(--pd);transform:scale(1.07);}
+.sbtn:disabled{background:var(--t3);cursor:not-allowed;transform:none;box-shadow:none;}
+.sbtn svg{width:18px;height:18px;fill:#fff;}
+.disc{text-align:center;font-size:10.5px;color:var(--t3);margin-top:6px;font-weight:600;}
+.mhero{display:flex;flex-direction:column;align-items:center;padding:24px 20px 18px;background:var(--surface);border-bottom:1.5px solid var(--border);flex-shrink:0;}
+.mface{width:110px;height:110px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:60px;margin-bottom:14px;background:var(--surface2);border:3px solid var(--border);transition:all .35s cubic-bezier(.34,1.56,.64,1);}
+.mface.sel{background:var(--pl);border-color:var(--primary);transform:scale(1.08);box-shadow:0 8px 32px rgba(60,179,113,.25);}
+.mq{font-size:20px;font-weight:900;color:var(--text);letter-spacing:-.03em;text-align:center;}
+.mqs{font-size:13px;color:var(--t3);font-weight:600;margin-top:4px;}
+.mtags{display:flex;flex-wrap:wrap;gap:9px;padding:18px;justify-content:center;flex-shrink:0;}
+.mtag{padding:10px 18px;border-radius:99px;border:2px solid var(--border);background:var(--surface);font-size:13px;font-weight:700;color:var(--t2);cursor:pointer;transition:all .22s;display:flex;align-items:center;gap:6px;box-shadow:var(--sh2);}
+.mtag:hover{transform:translateY(-1px);box-shadow:var(--sh);}
+.mtag.on{background:var(--primary);color:#fff;border-color:var(--primary);box-shadow:0 4px 16px rgba(60,179,113,.35);}
+.mact{padding:0 18px 16px;flex-shrink:0;}
+.mnote{width:100%;padding:13px 16px;border:1.5px solid var(--border);border-radius:var(--rlg);background:var(--surface);font-size:14px;color:var(--text);font-family:'Nunito',sans-serif;font-weight:600;outline:none;resize:none;line-height:1.5;margin-bottom:13px;transition:all .2s;box-shadow:var(--sh2);}
+.mnote:focus{border-color:var(--primary);}
+.mnote::placeholder{color:var(--t3);}
+.btnp{width:100%;padding:15px;background:var(--primary);color:#fff;border:none;border-radius:var(--rlg);font-size:15px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;transition:all .2s;box-shadow:0 4px 18px rgba(60,179,113,.35);}
+.btnp:hover{background:var(--pd);transform:translateY(-1px);}
+.mhist{padding:0 18px 18px;}
+.hl{font-size:11px;font-weight:800;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;}
+.hi{display:flex;align-items:center;gap:12px;padding:13px 15px;background:var(--surface);border-radius:var(--rlg);margin-bottom:8px;border:1.5px solid var(--border);box-shadow:var(--sh2);}
+.hiem{font-size:24px;}.hii{flex:1;}
+.him{font-size:13px;font-weight:700;color:var(--text);}
+.hin{font-size:12px;color:var(--t2);margin-top:2px;font-weight:500;}
+.hit{font-size:11px;color:var(--t3);font-weight:600;}
+.bwrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 24px;text-align:center;}
+.bphase-pill{display:inline-flex;align-items:center;gap:6px;padding:7px 18px;border-radius:99px;font-size:13px;font-weight:800;background:var(--pl);color:var(--primary);margin-bottom:26px;transition:all .4s;min-width:180px;justify-content:center;}
+.borb-wrap{position:relative;width:200px;height:200px;margin-bottom:26px;}
+.borb{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 35% 35%,#80E8B0 0%,var(--primary) 55%,var(--pd) 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 0 0 rgba(60,179,113,.4),0 8px 40px rgba(60,179,113,.3);transition:transform .5s cubic-bezier(.4,0,.2,1),box-shadow .5s,background .5s;}
+.borb.expand{transform:scale(1.14);box-shadow:0 0 0 22px rgba(60,179,113,.1),0 0 0 44px rgba(60,179,113,.05),0 8px 40px rgba(60,179,113,.3);}
+.borb.hold{transform:scale(1.14);background:radial-gradient(circle at 35% 35%,#D4CAFF 0%,#9381FF 55%,#7060D0 100%);box-shadow:0 0 0 18px rgba(147,129,255,.12),0 8px 40px rgba(147,129,255,.25);}
+.borb.exhale{transform:scale(.88);box-shadow:0 0 0 0 transparent,0 8px 20px rgba(60,179,113,.2);}
+.borb.rest{transform:scale(.88);}
+.oph{font-size:15px;font-weight:800;color:#fff;letter-spacing:-.01em;}
+.osecs{font-size:44px;font-weight:300;color:rgba(255,255,255,.95);line-height:1;}
+.osub{font-size:11px;font-weight:700;color:rgba(255,255,255,.7);margin-top:4px;letter-spacing:.03em;text-transform:uppercase;}
+.bcycrow{display:flex;align-items:center;gap:6px;margin-bottom:10px;}
+.bcylbl{font-size:12px;font-weight:700;color:var(--t3);margin-right:6px;}
+.bcd{width:28px;height:8px;border-radius:4px;background:var(--border);transition:all .4s;}
+.bcd.act{background:var(--primary);width:16px;}
+.bcd.done{background:var(--primary);opacity:.5;}
+.bhint{font-size:13px;color:var(--t3);font-weight:600;margin-bottom:22px;max-width:260px;line-height:1.6;}
+.bbtns{display:flex;gap:12px;width:100%;max-width:290px;}
+.bbtn{flex:1;padding:14px;border-radius:var(--rlg);font-size:14px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;transition:all .2s;border:2px solid var(--border);background:var(--surface);color:var(--t2);}
+.bbtn.go{background:var(--primary);color:#fff;border-color:var(--primary);box-shadow:0 4px 18px rgba(60,179,113,.35);}
+.bbtn:hover{opacity:.85;}
+.gtabs{display:flex;gap:8px;padding:12px 16px;background:var(--surface);border-bottom:1.5px solid var(--border);overflow-x:auto;flex-shrink:0;}
+.gtabs::-webkit-scrollbar{display:none;}
+.gt{padding:8px 16px;border-radius:99px;border:1.5px solid var(--border);background:var(--surface2);font-size:12px;font-weight:800;color:var(--t2);cursor:pointer;white-space:nowrap;transition:all .22s;font-family:'Nunito',sans-serif;}
+.gt.on{background:var(--primary);color:#fff;border-color:var(--primary);box-shadow:0 4px 12px rgba(60,179,113,.3);}
+.gpanels{flex:1;position:relative;overflow:hidden;}
+.gp{display:none;position:absolute;inset:0;flex-direction:column;}
+.gp.on{display:flex;}
+#gp-pond{background:#092b1e;cursor:crosshair;}
+#pc{position:absolute;inset:0;display:block;}
+.pond-ui{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:28px;pointer-events:none;}
+.pond-chip{background:rgba(255,255,255,.13);backdrop-filter:blur(10px);color:rgba(255,255,255,.9);font-size:13px;font-weight:700;padding:10px 22px;border-radius:99px;border:1px solid rgba(255,255,255,.18);}
+#gp-bubbles{background:linear-gradient(170deg,#edf9f2 0%,#cce8d8 100%);overflow:hidden;}
+.bbar{position:relative;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:13px 20px;background:rgba(255,255,255,.88);backdrop-filter:blur(10px);border-bottom:1.5px solid var(--border);flex-shrink:0;}
+.bscr{font-size:13px;font-weight:800;color:var(--primary);}
+.btmr{font-size:12px;font-weight:700;color:var(--t2);}
+#bfield{position:absolute;left:0;right:0;top:50px;bottom:0;overflow:hidden;}
+.tb{position:absolute;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;font-size:11px;font-weight:800;cursor:pointer;line-height:1.3;padding:8px;animation:floatUp linear forwards;user-select:none;will-change:transform;}
+@keyframes floatUp{0%{transform:translateY(0) translateX(0);}100%{transform:translateY(calc(-100vh - 150px)) translateX(var(--dx));}}
+.tb.calm{background:radial-gradient(circle,#b7f0d4,#74c69d);color:#1b4332;border:2px solid rgba(116,198,157,.6);box-shadow:0 4px 20px rgba(116,198,157,.4);}
+.tb.anxious{background:radial-gradient(circle,#ffd6dc,#ffaec0);color:#7a1928;border:2px solid rgba(255,174,192,.6);box-shadow:0 4px 20px rgba(255,174,192,.4);}
+.popfx{position:absolute;font-size:18px;font-weight:900;pointer-events:none;animation:popUp .7s ease-out forwards;z-index:20;}
+@keyframes popUp{0%{opacity:1;transform:scale(1) translateY(0);}100%{opacity:0;transform:scale(1.4) translateY(-36px);}}
+.bstart{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(237,249,242,.96);z-index:30;padding:32px;text-align:center;}
+.bstart h3{font-size:24px;font-weight:900;color:var(--text);letter-spacing:-.03em;margin-bottom:10px;}
+.bstart p{font-size:13.5px;color:var(--t2);font-weight:600;line-height:1.7;margin-bottom:22px;max-width:280px;}
+.leg{display:flex;gap:18px;justify-content:center;margin-bottom:22px;}
+.li{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--t2);font-weight:700;}
+.ld{width:14px;height:14px;border-radius:50%;}
+.ld.c{background:#74c69d;}.ld.a{background:#ffaec0;}
+.gsbtn{padding:15px 40px;background:var(--primary);color:#fff;border:none;border-radius:var(--rlg);font-size:15px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;transition:all .2s;box-shadow:0 4px 18px rgba(60,179,113,.4);}
+.gsbtn:hover{background:var(--pd);transform:translateY(-2px);}
+#gp-grounding{background:var(--surface);overflow-y:auto;}
+#gp-grounding::-webkit-scrollbar{display:none;}
+.gnd{padding:22px 18px;}
+.gndtit{font-size:22px;font-weight:900;color:var(--text);letter-spacing:-.03em;margin-bottom:6px;}
+.gndsub{font-size:13px;color:var(--t2);font-weight:600;line-height:1.6;margin-bottom:18px;}
+.gs{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rxl);padding:16px;margin-bottom:12px;box-shadow:var(--sh2);transition:all .35s;}
+.gs.done{border-color:var(--primary);background:var(--pl);}
+.gsh{display:flex;align-items:center;gap:11px;margin-bottom:11px;}
+.gn{width:32px;height:32px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;transition:all .3s;}
+.gst{font-size:14px;font-weight:800;color:var(--text);}
+.gss{font-size:11px;color:var(--t3);font-weight:600;margin-top:2px;}
+.gbadge{margin-left:auto;background:var(--pl);color:var(--primary);font-size:11px;font-weight:800;padding:4px 12px;border-radius:99px;transition:all .3s;}
+.gs.done .gbadge{background:var(--primary);color:#fff;}
+.gr{display:flex;gap:8px;margin-bottom:10px;}
+.gr input{flex:1;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--rsm);font-size:13px;font-family:'Nunito',sans-serif;font-weight:600;background:var(--surface2);color:var(--text);outline:none;transition:border-color .2s;}
+.gr input:focus{border-color:var(--primary);background:#fff;}
+.gadd{padding:10px 16px;background:var(--primary);color:#fff;border:none;border-radius:var(--rsm);font-size:13px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.gadd:hover{background:var(--pd);}
+.gadd:disabled{background:var(--border);cursor:not-allowed;}
+.gchips{display:flex;flex-wrap:wrap;gap:6px;}
+.gchip{background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;color:var(--t2);display:flex;align-items:center;gap:5px;font-weight:600;}
+.gs.done .gchip{border-color:rgba(60,179,113,.3);color:var(--pd);}
+.gcomp{display:none;text-align:center;padding:28px 22px;background:linear-gradient(135deg,var(--primary),#52D68A);border-radius:var(--rxl);margin-top:14px;color:#fff;}
+.gcomp.on{display:block;}
+.gcomp .gci{font-size:42px;margin-bottom:12px;}
+.gcomp h3{font-size:22px;font-weight:900;letter-spacing:-.03em;margin-bottom:8px;}
+.gcomp p{font-size:13px;opacity:.87;line-height:1.65;font-weight:600;}
+.rbanner{margin-bottom:14px;padding:20px;background:linear-gradient(135deg,var(--primary),#52D68A);border-radius:var(--rxl);color:#fff;}
+.rbanner h3{font-size:16px;font-weight:900;margin-bottom:6px;}
+.rbanner p{font-size:13px;opacity:.88;line-height:1.6;font-weight:600;}
+.rcard{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rxl);padding:18px;margin-bottom:12px;box-shadow:var(--sh2);transition:all .2s;}
+.rcard:hover{box-shadow:var(--sh);}
+.rch{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+.rico{width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.rico.g{background:var(--pl);}.rico.r{background:var(--crb);}.rico.b{background:#e8f0fe;}.rico.o{background:#fff3e0;}
+.rname{font-size:14px;font-weight:800;color:var(--text);}
+.rtype{font-size:11px;color:var(--t3);font-weight:600;margin-top:2px;}
+.rdesc{font-size:13px;color:var(--t2);font-weight:600;line-height:1.55;margin-bottom:12px;}
+.rcall{display:inline-flex;align-items:center;gap:7px;background:var(--primary);color:#fff;padding:9px 18px;border-radius:var(--rmd);font-size:13px;font-weight:800;text-decoration:none;transition:all .2s;box-shadow:0 3px 12px rgba(60,179,113,.3);}
+.rcall:hover{background:var(--pd);}
+.tcard{background:var(--pl);border:1.5px solid rgba(60,179,113,.25);border-radius:var(--rxl);padding:18px;margin-bottom:12px;}
+.tcard h3{font-size:14px;font-weight:800;color:var(--pd);margin-bottom:6px;}
+.tcard p{font-size:13px;color:var(--pd);line-height:1.6;opacity:.88;font-weight:600;}
+</style>
 </head>
 <body>
-<div class="app">
+<div id="app">
 
-  <div class="header">
-    <div class="header-top">
-      <div class="logo">🌉</div>
-      <div class="header-text">
-        <h1>MentalBridge</h1>
-        <p>Your private mental health companion</p>
-      </div>
+<!-- CHAT -->
+<div class="screen active" id="screen-chat">
+  <div class="hdr"><div class="hdr-r">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div class="bmark">🌉</div>
+      <div><div class="btitle">MentalBridge</div><div class="bsub">Your private companion</div></div>
     </div>
-    <div class="status">
-      <div class="status-dot"></div>
-      Private · Offline · Always here
+    <div class="pill"><div class="dot-live"></div>Private</div>
+  </div></div>
+  <div class="lstrip">
+    <button class="lbtn on" onclick="setLang('en',this)">English</button>
+    <button class="lbtn" onclick="setLang('ta',this)">தமிழ்</button>
+    <button class="lbtn" onclick="setLang('hi',this)">हिंदी</button>
+    <button class="lbtn" onclick="setLang('te',this)">తెలుగు</button>
+    <button class="lbtn" onclick="setLang('kn',this)">ಕನ್ನಡ</button>
+  </div>
+  <div class="msgs" id="msgs">
+    <div id="wcard">
+      <div class="wblob"><div class="wbf">🌿</div><div class="wbt">You're not alone</div><div class="wbs">A safe, private space. No judgment. No data stored. Just someone to listen.</div></div>
+      <div style="height:14px"></div>
+      <div class="qpl">Start with something…</div>
+      <button class="qpb" onclick="qsend(this)">I've been feeling anxious and can't explain why</button>
+      <button class="qpb" onclick="qsend(this)">I'm under a lot of pressure from my family</button>
+      <button class="qpb" onclick="qsend(this)">I feel very lonely lately</button>
+      <button class="qpb" onclick="qsend(this)">I failed and I don't know how to face people</button>
     </div>
   </div>
-
-  <div class="lang-bar">
-    <button class="lang-btn active" onclick="setLang('en', this)">English</button>
-    <button class="lang-btn" onclick="setLang('ta', this)">தமிழ்</button>
-    <button class="lang-btn" onclick="setLang('hi', this)">हिंदी</button>
-    <button class="lang-btn" onclick="setLang('te', this)">తెలుగు</button>
-  </div>
-
-  <div class="messages" id="messages">
-    <div class="welcome" id="welcome">
-      <div class="icon">🌸</div>
-      <h2>You're not alone</h2>
-      <p>This is a safe, private space. Whatever you're feeling, you can say it here. No judgment. No data stored. Just someone to listen.</p>
+  <div class="cbar" id="cbar"><strong>💙 You don't have to face this alone</strong>iCall India: <a href="tel:9152987821">9152987821</a> &nbsp;·&nbsp; Vandrevala: <a href="tel:18602662345">1860-2662-345</a> (24/7)</div>
+  <div class="inzone">
+    <div class="inrow">
+      <textarea id="ci" rows="1" placeholder="What's on your mind…" onkeydown="hkey(event)" oninput="arz(this)"></textarea>
+      <button class="sbtn" id="sbtn" onclick="sendMsg()"><svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button>
     </div>
+    <div class="disc">MentalBridge is not a substitute for professional care</div>
   </div>
-
-  <div class="crisis-banner" id="crisis-banner">
-    <strong>You don't have to face this alone</strong>
-    iCall (India): <a href="tel:9152987821">9152987821</a> &nbsp;·&nbsp;
-    Vandrevala Foundation: <a href="tel:18602662345">1860-2662-345</a>
-  </div>
-
-  <div class="input-area">
-    <div class="input-row">
-      <textarea
-        id="input"
-        placeholder="What's on your mind..."
-        rows="1"
-        onkeydown="handleKey(event)"
-        oninput="autoResize(this)"
-      ></textarea>
-      <button class="send-btn" id="send-btn" onclick="sendMessage()">
-        <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
-      </button>
-    </div>
-    <div class="disclaimer">MentalBridge is not a substitute for professional help</div>
-  </div>
-
+  <nav class="nav">
+    <button class="nb on" onclick="goScreen('chat',this)"><div class="ni">💬</div><span class="nl">Talk</span></button>
+    <button class="nb" onclick="goScreen('mood',this)"><div class="ni">🪷</div><span class="nl">Mood</span></button>
+    <button class="nb" onclick="goScreen('breathe',this)"><div class="ni">🫧</div><span class="nl">Breathe</span></button>
+    <button class="nb" onclick="goScreen('games',this)"><div class="ni">🎮</div><span class="nl">Calm</span></button>
+    <button class="nb" onclick="goScreen('resources',this)"><div class="ni">📞</div><span class="nl">Help</span></button>
+  </nav>
 </div>
 
+<!-- MOOD -->
+<div class="screen" id="screen-mood">
+  <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column;">
+    <div class="mhero">
+      <div class="mface" id="mface">😊</div>
+      <div class="mq">How do you feel today?</div>
+      <div class="mqs" id="mqs">Tap a mood to begin</div>
+    </div>
+    <div class="mtags">
+      <button class="mtag" onclick="pickM(this,'😄','Great')">😄 Great</button>
+      <button class="mtag" onclick="pickM(this,'🙂','Good')">🙂 Good</button>
+      <button class="mtag" onclick="pickM(this,'😐','Okay')">😐 Okay</button>
+      <button class="mtag" onclick="pickM(this,'😔','Low')">😔 Low</button>
+      <button class="mtag" onclick="pickM(this,'😢','Sad')">😢 Sad</button>
+      <button class="mtag" onclick="pickM(this,'😰','Anxious')">😰 Anxious</button>
+      <button class="mtag" onclick="pickM(this,'😤','Angry')">😤 Angry</button>
+      <button class="mtag" onclick="pickM(this,'😴','Tired')">😴 Tired</button>
+      <button class="mtag" onclick="pickM(this,'🤯','Overwhelmed')">🤯 Overwhelmed</button>
+      <button class="mtag" onclick="pickM(this,'🥰','Grateful')">🥰 Grateful</button>
+    </div>
+    <div class="mact">
+      <textarea class="mnote" id="mnote" placeholder="Add a note… (optional)" rows="2"></textarea>
+      <button class="btnp" id="msavebtn" onclick="saveMood()">Save mood ✓</button>
+    </div>
+    <div class="mhist" id="mhist"></div>
+  </div>
+  <nav class="nav" style="flex-shrink:0;">
+    <button class="nb" onclick="goScreen('chat',this)"><div class="ni">💬</div><span class="nl">Talk</span></button>
+    <button class="nb on" onclick="goScreen('mood',this)"><div class="ni">🪷</div><span class="nl">Mood</span></button>
+    <button class="nb" onclick="goScreen('breathe',this)"><div class="ni">🫧</div><span class="nl">Breathe</span></button>
+    <button class="nb" onclick="goScreen('games',this)"><div class="ni">🎮</div><span class="nl">Calm</span></button>
+    <button class="nb" onclick="goScreen('resources',this)"><div class="ni">📞</div><span class="nl">Help</span></button>
+  </nav>
+</div>
+
+<!-- BREATHE -->
+<div class="screen" id="screen-breathe">
+  <div class="hdr"><div class="hdr-r">
+    <div><div class="btitle">Breathing Exercise</div><div class="bsub">4 · 7 · 8 calming technique</div></div>
+    <div class="pill" id="bcp">Cycle 0 / 4</div>
+  </div></div>
+  <div class="bwrap">
+    <div class="bphase-pill" id="bpill">✦ Ready to begin</div>
+    <div class="borb-wrap">
+      <div class="borb" id="borb">
+        <div class="oph" id="oph">—</div>
+        <div class="osecs" id="osecs">♡</div>
+        <div class="osub" id="osub">Press Start</div>
+      </div>
+    </div>
+    <div class="bcycrow">
+      <span class="bcylbl">Progress</span>
+      <div class="bcd" id="bc0"></div>
+      <div class="bcd" id="bc1"></div>
+      <div class="bcd" id="bc2"></div>
+      <div class="bcd" id="bc3"></div>
+    </div>
+    <div class="bhint">Each cycle: 4s inhale → 7s hold → 8s exhale. Complete 4 cycles to reset your nervous system.</div>
+    <div class="bbtns">
+      <button class="bbtn go" id="bbtn" onclick="toggleB()">Start</button>
+      <button class="bbtn" onclick="resetB()">Reset</button>
+    </div>
+  </div>
+  <nav class="nav">
+    <button class="nb" onclick="goScreen('chat',this)"><div class="ni">💬</div><span class="nl">Talk</span></button>
+    <button class="nb" onclick="goScreen('mood',this)"><div class="ni">🪷</div><span class="nl">Mood</span></button>
+    <button class="nb on" onclick="goScreen('breathe',this)"><div class="ni">🫧</div><span class="nl">Breathe</span></button>
+    <button class="nb" onclick="goScreen('games',this)"><div class="ni">🎮</div><span class="nl">Calm</span></button>
+    <button class="nb" onclick="goScreen('resources',this)"><div class="ni">📞</div><span class="nl">Help</span></button>
+  </nav>
+</div>
+
+<!-- GAMES -->
+<div class="screen" id="screen-games">
+  <div class="hdr"><div class="hdr-r">
+    <div><div class="btitle">Calm Space 🌿</div><div class="bsub">Interactive mind tools</div></div>
+  </div></div>
+  <div class="gtabs">
+    <button class="gt on" onclick="swGame('pond',this)">🌊 Ripple Pond</button>
+    <button class="gt" onclick="swGame('bubbles',this)">🫧 Pop Thoughts</button>
+    <button class="gt" onclick="swGame('grounding',this)">🌱 5-4-3-2-1</button>
+  </div>
+  <div class="gpanels">
+    <div class="gp on" id="gp-pond">
+      <canvas id="pc"></canvas>
+      <div class="pond-ui"><div class="pond-chip">Tap anywhere · Watch the water breathe 🌊</div></div>
+    </div>
+    <div class="gp" id="gp-bubbles">
+      <div class="bbar"><div class="bscr">🌿 <span id="bnum">0</span> released</div><div class="btmr" id="btmr">1:30 remaining</div></div>
+      <div id="bfield"></div>
+      <div class="bstart" id="bstrt">
+        <h3>Pop Your Thoughts</h3>
+        <p>Calm green bubbles float up — tap them to release. Let the red anxious ones drift away without chasing them.</p>
+        <div class="leg"><div class="li"><div class="ld c"></div>Calm — tap it</div><div class="li"><div class="ld a"></div>Anxious — let go</div></div>
+        <button class="gsbtn" onclick="startBubs()">Begin</button>
+      </div>
+    </div>
+    <div class="gp" id="gp-grounding">
+      <div class="gnd">
+        <div class="gndtit">5-4-3-2-1 Grounding</div>
+        <div class="gndsub">Anchor yourself to the present moment, one sense at a time.</div>
+        <div class="gs" id="gs5"><div class="gsh"><div class="gn">1</div><div><div class="gst">5 things you can <em>see</em></div><div class="gss">👁 Look around slowly</div></div><div class="gbadge" id="g5b">0/5</div></div><div class="gr"><input id="g5i" placeholder="e.g. a window, a plant…" maxlength="30" onkeydown="gk(event,'5')"/><button class="gadd" id="g5a" onclick="ga('5')">Add</button></div><div class="gchips" id="g5c"></div></div>
+        <div class="gs" id="gs4"><div class="gsh"><div class="gn">2</div><div><div class="gst">4 things you can <em>touch</em></div><div class="gss">✋ Feel textures near you</div></div><div class="gbadge" id="g4b">0/4</div></div><div class="gr"><input id="g4i" placeholder="e.g. my chair, my shirt…" maxlength="30" onkeydown="gk(event,'4')"/><button class="gadd" id="g4a" onclick="ga('4')">Add</button></div><div class="gchips" id="g4c"></div></div>
+        <div class="gs" id="gs3"><div class="gsh"><div class="gn">3</div><div><div class="gst">3 things you can <em>hear</em></div><div class="gss">👂 Listen beyond the noise</div></div><div class="gbadge" id="g3b">0/3</div></div><div class="gr"><input id="g3i" placeholder="e.g. a fan, rain…" maxlength="30" onkeydown="gk(event,'3')"/><button class="gadd" id="g3a" onclick="ga('3')">Add</button></div><div class="gchips" id="g3c"></div></div>
+        <div class="gs" id="gs2"><div class="gsh"><div class="gn">4</div><div><div class="gst">2 things you can <em>smell</em></div><div class="gss">👃 Real or remembered</div></div><div class="gbadge" id="g2b">0/2</div></div><div class="gr"><input id="g2i" placeholder="e.g. coffee, fresh air…" maxlength="30" onkeydown="gk(event,'2')"/><button class="gadd" id="g2a" onclick="ga('2')">Add</button></div><div class="gchips" id="g2c"></div></div>
+        <div class="gs" id="gs1"><div class="gsh"><div class="gn">5</div><div><div class="gst">1 thing you can <em>taste</em></div><div class="gss">👅 Current or recent</div></div><div class="gbadge" id="g1b">0/1</div></div><div class="gr"><input id="g1i" placeholder="e.g. tea, mint…" maxlength="30" onkeydown="gk(event,'1')"/><button class="gadd" id="g1a" onclick="ga('1')">Add</button></div><div class="gchips" id="g1c"></div></div>
+        <div class="gcomp" id="gcomp"><div class="gci">🌸</div><h3>You are here. You are safe.</h3><p>You just anchored yourself to the present moment. That quiet focus is always available to you.</p></div>
+      </div>
+    </div>
+  </div>
+  <nav class="nav">
+    <button class="nb" onclick="goScreen('chat',this)"><div class="ni">💬</div><span class="nl">Talk</span></button>
+    <button class="nb" onclick="goScreen('mood',this)"><div class="ni">🪷</div><span class="nl">Mood</span></button>
+    <button class="nb" onclick="goScreen('breathe',this)"><div class="ni">🫧</div><span class="nl">Breathe</span></button>
+    <button class="nb on" onclick="goScreen('games',this)"><div class="ni">🎮</div><span class="nl">Calm</span></button>
+    <button class="nb" onclick="goScreen('resources',this)"><div class="ni">📞</div><span class="nl">Help</span></button>
+  </nav>
+</div>
+
+<!-- RESOURCES -->
+<div class="screen" id="screen-resources">
+  <div class="hdr"><div class="hdr-r"><div><div class="btitle">Get Help</div><div class="bsub">Indian mental health resources</div></div></div></div>
+  <div class="s-inner">
+    <div class="rbanner"><h3>🌿 You took a brave step</h3><p>Reaching out — even just looking at this page — takes real courage. These resources are here whenever you're ready.</p></div>
+    <div class="rcard"><div class="rch"><div class="rico g">📞</div><div><div class="rname">iCall</div><div class="rtype">Counselling · Mon–Sat 8am–10pm</div></div></div><div class="rdesc">Trained psychologists who understand Indian culture. Available in multiple languages.</div><a class="rcall" href="tel:9152987821">📞 9152987821</a></div>
+    <div class="rcard"><div class="rch"><div class="rico r">🆘</div><div><div class="rname">Vandrevala Foundation</div><div class="rtype">Crisis support · 24/7</div></div></div><div class="rdesc">Free, confidential crisis support available around the clock across India.</div><a class="rcall" href="tel:18602662345">📞 1860-2662-345</a></div>
+    <div class="rcard"><div class="rch"><div class="rico b">🏥</div><div><div class="rname">NIMHANS</div><div class="rtype">National Institute · Bangalore</div></div></div><div class="rdesc">India's premier mental health institution. Consultations and nationwide referrals.</div><a class="rcall" href="tel:08046110007">📞 080-46110007</a></div>
+    <div class="rcard"><div class="rch"><div class="rico o">💬</div><div><div class="rname">Snehi</div><div class="rtype">Emotional support · Chennai based</div></div></div><div class="rdesc">Non-judgmental emotional support. Tamil-speaking counsellors available.</div><a class="rcall" href="tel:04424640050">📞 044-24640050</a></div>
+    <div class="tcard"><h3>💡 Remember</h3><p>Asking for help is not weakness. Every person on this page dedicated their life to helping people like you. You deserve that support.</p></div>
+  </div>
+  <nav class="nav">
+    <button class="nb" onclick="goScreen('chat',this)"><div class="ni">💬</div><span class="nl">Talk</span></button>
+    <button class="nb" onclick="goScreen('mood',this)"><div class="ni">🪷</div><span class="nl">Mood</span></button>
+    <button class="nb" onclick="goScreen('breathe',this)"><div class="ni">🫧</div><span class="nl">Breathe</span></button>
+    <button class="nb" onclick="goScreen('games',this)"><div class="ni">🎮</div><span class="nl">Calm</span></button>
+    <button class="nb on" onclick="goScreen('resources',this)"><div class="ni">📞</div><span class="nl">Help</span></button>
+  </nav>
+</div>
+
+</div>
 <script>
-  const OLLAMA_URL = "http://localhost:11434/api/chat"
-  let history = []
-  let isThinking = false
+'use strict'
 
-  const crisisWords = [
-    "don't want to be here", "end everything", "ending everything",
-    "kill myself", "suicide", "self harm", "want to die",
-    "no reason to live", "disappear forever", "உயிரை மாய்த்து",
-    "மரணம்", "खत्म कर", "मरना चाहता"
-  ]
+// ── NAV ──
+function goScreen(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'))
+  document.getElementById('screen-'+name).classList.add('active')
+  if(name==='mood') renderHist()
+  if(name==='games') requestAnimationFrame(()=>requestAnimationFrame(initGame))
+}
 
-  const SYSTEM_PROMPT = `You are MentalBridge. A warm, compassionate mental health 
-first-aid companion for people in India. You are not a therapist. You are like 
-a trusted older sibling who genuinely listens and cares.
+// ── LANG ──
+function setLang(l,btn){
+  document.querySelectorAll('.lbtn').forEach(b=>b.classList.remove('on'))
+  btn.classList.add('on')
+  const ph={en:"What's on your mind…",ta:"உங்கள் மனதில் என்ன இருக்கிறது…",hi:"आपके मन में क्या है…",te:"మీ మనసులో ఏముంది…",kn:"ನಿಮ್ಮ ಮನಸ್ಸಿನಲ್ಲಿ ಏನಿದೆ…"}
+  document.getElementById('ci').placeholder=ph[l]||ph.en
+}
 
-RULES YOU MUST FOLLOW WITHOUT EXCEPTION:
+// ── CHAT ──
+const CW_WORDS=["don't want to be here","end everything","ending everything",
+  "kill myself","suicide","self harm","want to die","no reason to live",
+  "disappear forever","i want to die","hurt myself","need to die",
+  "i need to die","want to end","end my life","end it all",
+  "not worth living","can't go on","better off dead","take my life",
+  "no point living","nothing to live for","i need to die",
+  "உயிரை மாய்த்து","மரணம்","सुसाइड","जीना नहीं","मर जाऊं","खत्म कर"]
 
-RULE 1 — IDENTITY:
-Never say "I am an AI" or "I'm a chatbot" or "I cannot provide treatment."
-You are MentalBridge. Only MentalBridge. Stay in this identity always.
+const DANGER_WORDS=['die','dead','dying','kill','suicide','harm','hurt','disappear','worthless','hopeless','murder','death']
 
-RULE 2 — LANGUAGE:
-Respond ONLY in the same language the user writes in.
-Tamil input → Tamil response only.
-Hindi input → Hindi response only.
-English input → English response only.
-Never mix languages.
+const SYS=`You are MentalBridge. Warm mental health first-aid companion for India.
+Rules: Never say "I am AI". Match user language exactly. NO lists or bullets. Max 3 short sentences. Indian helplines only: iCall 9152987821, Vandrevala 1860-2662-345. If crisis: acknowledge pain first then mention iCall. Structure: reflect then validate then one gentle question.`
 
-RULE 3 — FORMAT:
-Never use bullet points. Never use numbered lists. Never use bold text.
-Write only in short, warm, flowing sentences like a real human conversation.
-Maximum 3 to 4 sentences per response. Short. Warm. Human.
+let hist=[],thinking=false
 
-RULE 4 — HELPLINES:
-Never give any American helpline numbers.
-The only helplines you ever mention are Indian ones:
-iCall India: 9152987821
-Vandrevala Foundation India: 1860-2662-345
+function arz(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,100)+'px'}
+function hkey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg()}}
+function qsend(btn){document.getElementById('ci').value=btn.textContent.trim();sendMsg()}
+function ts(){return new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}
 
-RULE 5 — CRISIS:
-If the user mentions not wanting to exist, self harm, ending everything,
-or suicide — your response must warmly acknowledge their pain first,
-then naturally mention iCall at 9152987821 in the same breath,
-then stay with them and keep talking gently.
+function addMsg(text,role){
+  const wc=document.getElementById('wcard');if(wc)wc.remove()
+  const box=document.getElementById('msgs')
+  const w=document.createElement('div');w.className='msg '+role
+  const b=document.createElement('div');b.className='bubble';b.textContent=text
+  const t=document.createElement('div');t.className='mt';t.textContent=ts()
+  w.appendChild(b);w.appendChild(t);box.appendChild(w);box.scrollTop=box.scrollHeight
+}
 
-RULE 6 — RESPONSE STRUCTURE:
-Every response follows exactly this pattern:
-One sentence reflecting back what they said.
-One sentence validating that it makes sense to feel this way.
-One gentle question — only one, never more than one.
-That is the complete response. Nothing more.
+function showTy(){
+  const box=document.getElementById('msgs')
+  const w=document.createElement('div');w.className='msg b';w.id='ty'
+  const b=document.createElement('div');b.className='tbub-wrap'
+  b.innerHTML='<div class="tdots"><span></span><span></span><span></span></div>'
+  w.appendChild(b);box.appendChild(w);box.scrollTop=box.scrollHeight
+}
 
-WHAT YOU NEVER SAY:
-Never say everything will be fine.
-Never say others have it worse.
-Never say just think positive.
-Never give a list of tips or suggestions.
-Never ask multiple questions at once.
+function hideTy(){const e=document.getElementById('ty');if(e)e.remove()}
 
-Remember: The person messaging you may be saying these words out loud
-for the very first time. Treat every message like it took courage to send.`
-
-  function setLang(lang, btn) {
-    document.querySelectorAll(".lang-btn").forEach(b => b.classList.remove("active"))
-    btn.classList.add("active")
-    const placeholders = {
-      en: "What's on your mind...",
-      ta: "உங்கள் மனதில் என்ன இருக்கிறது...",
-      hi: "आपके मन में क्या है...",
-      te: "మీ మనసులో ఏముంది..."
-    }
-    document.getElementById("input").placeholder = placeholders[lang]
+function chkCrisis(t){
+  const lower=t.toLowerCase()
+  const phraseMatch=CW_WORDS.some(w=>lower.includes(w))
+  const wordMatch=DANGER_WORDS.some(w=>new RegExp('\\b'+w+'\\b','i').test(lower))
+  if(phraseMatch||wordMatch){
+    document.getElementById('cbar').classList.add('on')
+    document.getElementById('cbar').scrollIntoView({behavior:'smooth'})
   }
+}
 
-  function autoResize(el) {
-    el.style.height = "auto"
-    el.style.height = Math.min(el.scrollHeight, 120) + "px"
+async function sendMsg(){
+  const inp=document.getElementById('ci')
+  const text=inp.value.trim()
+  if(!text||thinking)return
+  inp.value='';inp.style.height='auto'
+  addMsg(text,'u');chkCrisis(text)
+  thinking=true;document.getElementById('sbtn').disabled=true;showTy()
+  const messages=[{role:'user',content:SYS+'\n\nAcknowledge.'},{role:'assistant',content:'Understood. I am MentalBridge.'},...hist,{role:'user',content:text}]
+  try{
+    const res=await fetch('http://localhost:11434/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'mentalbridge',messages,stream:false,options:{temperature:.7,top_p:.9}})})
+    const data=await res.json()
+    let reply=data.message.content.replace(/<end_of_turn>/g,'').replace(/<\/s>/g,'').trim()
+    const sentences=reply.match(/[^.!?]+[.!?]+/g)
+    if(sentences&&sentences.length>3) reply=sentences.slice(0,3).join(' ').trim()
+    const lower=text.toLowerCase()
+    const isCrisis=CW_WORDS.some(w=>lower.includes(w))||DANGER_WORDS.some(w=>new RegExp('\\b'+w+'\\b','i').test(lower))
+    if(isCrisis&&!reply.includes('9152987821')) reply=reply+' Please reach out to iCall at 9152987821 — they will listen without judgment.'
+    hideTy();addMsg(reply,'b')
+    hist.push({role:'user',content:text});hist.push({role:'assistant',content:reply})
+  }catch(e){
+    hideTy();addMsg("I'm having trouble connecting. Please make sure Ollama is running.",'b')
   }
+  thinking=false;document.getElementById('sbtn').disabled=false
+  document.getElementById('ci').focus()
+}
 
-  function handleKey(e) {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault()
-      sendMessage()
-    }
+// ── MOOD ──
+let selMood=null,mLog=[]
+function pickM(btn,em,label){
+  document.querySelectorAll('.mtag').forEach(b=>b.classList.remove('on'))
+  btn.classList.add('on');selMood={em,label}
+  const f=document.getElementById('mface');f.textContent=em;f.classList.add('sel')
+  document.getElementById('mqs').textContent='Feeling '+label.toLowerCase()+'…'
+}
+function saveMood(){
+  if(!selMood){alert('Please select a mood first');return}
+  const note=document.getElementById('mnote').value.trim()
+  mLog.unshift({...selMood,note,time:new Date().toLocaleString('en-IN',{hour:'2-digit',minute:'2-digit',month:'short',day:'numeric'})})
+  selMood=null
+  document.querySelectorAll('.mtag').forEach(b=>b.classList.remove('on'))
+  document.getElementById('mnote').value=''
+  const f=document.getElementById('mface');f.textContent='😊';f.classList.remove('sel')
+  document.getElementById('mqs').textContent='Tap a mood to begin'
+  renderHist()
+  const btn=document.getElementById('msavebtn');btn.textContent='Saved! ✓';btn.style.background='#2A8C57'
+  setTimeout(()=>{btn.textContent='Save mood ✓';btn.style.background=''},1800)
+}
+function renderHist(){
+  const el=document.getElementById('mhist')
+  if(!mLog.length){el.innerHTML='';return}
+  el.innerHTML='<div class="hl" style="padding:0 18px;margin-bottom:8px">Recent moods</div>'+
+    '<div style="padding:0 18px 18px">'+mLog.slice(0,5).map(m=>'<div class="hi"><div class="hiem">'+m.em+'</div><div class="hii"><div class="him">'+m.label+'</div>'+(m.note?'<div class="hin">'+m.note+'</div>':'')+'</div><div class="hit">'+m.time+'</div></div>').join('')+'</div>'
+}
+
+// ── BREATHING ──
+const PHASES=[
+  {n:'Inhale',s:4,sub:'Breathe in slowly',cls:'expand',pill:'🌬️ Inhale'},
+  {n:'Hold',s:7,sub:'Hold gently',cls:'hold',pill:'⏸ Hold'},
+  {n:'Exhale',s:8,sub:'Release fully',cls:'exhale',pill:'💨 Exhale'},
+  {n:'Rest',s:2,sub:'Pause & rest',cls:'rest',pill:'✦ Rest'},
+]
+let bOn=false,bPh=0,bCy=0,bSecs=0,bIval=null,bTO=null
+
+function toggleB(){bOn?pauseB():resumeB()}
+function pauseB(){bOn=false;clearInterval(bIval);clearTimeout(bTO);document.getElementById('bbtn').textContent='Resume';document.getElementById('bpill').textContent='⏸ Paused'}
+function resumeB(){bOn=true;document.getElementById('bbtn').textContent='Pause';runPhase(bPh,bSecs>0?bSecs:PHASES[bPh].s)}
+
+function runPhase(idx,secs){
+  if(!bOn)return
+  bPh=idx;bSecs=secs
+  const p=PHASES[idx]
+  document.getElementById('borb').className='borb '+p.cls
+  document.getElementById('oph').textContent=p.n
+  document.getElementById('osecs').textContent=secs
+  document.getElementById('osub').textContent=p.sub
+  document.getElementById('bpill').textContent=p.pill+' — '+secs+'s'
+  document.getElementById('bcp').textContent='Cycle '+(bCy+1)+' / 4'
+  updBDots();clearInterval(bIval)
+  bIval=setInterval(()=>{
+    bSecs--;document.getElementById('osecs').textContent=bSecs
+    document.getElementById('bpill').textContent=p.pill+' — '+bSecs+'s'
+    if(bSecs<=0){clearInterval(bIval);nextPhase()}
+  },1000)
+}
+
+function nextPhase(){
+  const nx=(bPh+1)%PHASES.length
+  if(nx===0){bCy++;updBDots();if(bCy>=4){doneB();return}}
+  bTO=setTimeout(()=>{if(bOn)runPhase(nx,PHASES[nx].s)},250)
+}
+
+function doneB(){
+  bOn=false;clearInterval(bIval)
+  document.getElementById('borb').className='borb'
+  document.getElementById('oph').textContent='Done'
+  document.getElementById('osecs').textContent='🌿'
+  document.getElementById('osub').textContent='Well done!'
+  document.getElementById('bpill').textContent='✓ Session complete'
+  document.getElementById('bbtn').textContent='Start'
+  document.getElementById('bcp').textContent='Cycle 4 / 4'
+  bPh=0;bCy=0;bSecs=0
+}
+
+function resetB(){
+  clearInterval(bIval);clearTimeout(bTO)
+  bOn=false;bPh=0;bCy=0;bSecs=0
+  document.getElementById('borb').className='borb'
+  document.getElementById('oph').textContent='—'
+  document.getElementById('osecs').textContent='♡'
+  document.getElementById('osub').textContent='Press Start'
+  document.getElementById('bpill').textContent='✦ Ready to begin'
+  document.getElementById('bbtn').textContent='Start'
+  document.getElementById('bcp').textContent='Cycle 0 / 4'
+  updBDots()
+}
+
+function updBDots(){
+  for(let i=0;i<4;i++){
+    const d=document.getElementById('bc'+i)
+    d.className='bcd'+(i<bCy?' done':i===bCy&&bOn?' act':'')
   }
+}
 
-  function getTime() {
-    return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+// ── GAMES ──
+let AG='pond'
+function swGame(name,btn){
+  document.querySelectorAll('.gt').forEach(t=>t.classList.remove('on'));btn.classList.add('on')
+  document.querySelectorAll('.gp').forEach(p=>p.classList.remove('on'))
+  document.getElementById('gp-'+name).classList.add('on')
+  AG=name;requestAnimationFrame(()=>requestAnimationFrame(initGame))
+}
+function initGame(){if(AG==='pond')initPond()}
+
+// ── RIPPLE POND ──
+let PC_=null,PX_=null,pRAF=null,pReady=false
+let PW=0,PH=0,wCur=null,wPrev=null,COLS=0,ROWS=0
+const DAMP=0.985,GRID_CELL=4
+let rips=[],fish=[],lilies=[],dragonflies=[],pollen=[]
+let causticOffscreen=null,causticCtx=null
+
+function initPond(){
+  PC_=document.getElementById('pc');PX_=PC_.getContext('2d',{alpha:false})
+  const panel=document.getElementById('gp-pond'),rect=panel.getBoundingClientRect()
+  PW=Math.round(rect.width)||320;PH=Math.round(rect.height)||400
+  if(PW<10||PH<10){setTimeout(initPond,60);return}
+  PC_.width=PW;PC_.height=PH
+  COLS=Math.ceil(PW/GRID_CELL)+2;ROWS=Math.ceil(PH/GRID_CELL)+2
+  wCur=new Float32Array(COLS*ROWS);wPrev=new Float32Array(COLS*ROWS)
+  causticOffscreen=document.createElement('canvas');causticOffscreen.width=PW;causticOffscreen.height=PH
+  causticCtx=causticOffscreen.getContext('2d')
+  if(!pReady){
+    pReady=true;spawnFish();spawnLilies();spawnDflies();spawnPollen()
+    PC_.addEventListener('click',pClick);PC_.addEventListener('touchstart',pTouch,{passive:false})
+    setInterval(autoDrip,2200)
+  }else{spawnFish();spawnLilies();spawnDflies();spawnPollen()}
+  if(pRAF)cancelAnimationFrame(pRAF);pRAF=requestAnimationFrame(pLoop)
+}
+
+function pClick(e){const r=PC_.getBoundingClientRect();disturb(e.clientX-r.left,e.clientY-r.top,180+Math.random()*60);addRip(e.clientX-r.left,e.clientY-r.top)}
+function pTouch(e){e.preventDefault();const r=PC_.getBoundingClientRect();Array.from(e.changedTouches).forEach(t=>{disturb(t.clientX-r.left,t.clientY-r.top,200);addRip(t.clientX-r.left,t.clientY-r.top)})}
+function autoDrip(){if(AG!=='pond')return;const x=PW*.1+Math.random()*PW*.8,y=PH*.1+Math.random()*PH*.8;disturb(x,y,40+Math.random()*30);addRip(x,y,true)}
+
+function disturb(x,y,strength){
+  const gc=Math.round(x/GRID_CELL),gr=Math.round(y/GRID_CELL),rad=Math.ceil(strength/GRID_CELL/6)
+  for(let dr=-rad;dr<=rad;dr++)for(let dc=-rad;dc<=rad;dc++){
+    const dist=Math.sqrt(dr*dr+dc*dc);if(dist>rad)continue
+    const cc=gc+dc,rr=gr+dr
+    if(cc>=0&&cc<COLS&&rr>=0&&rr<ROWS)wCur[rr*COLS+cc]-=(strength/rad)*(1-dist/rad)*.5
   }
+}
 
-  function addMessage(text, role) {
-    const welcome = document.getElementById("welcome")
-    if (welcome) welcome.remove()
-
-    const msgs = document.getElementById("messages")
-    const wrapper = document.createElement("div")
-    wrapper.className = `msg ${role}`
-
-    const bubble = document.createElement("div")
-    bubble.className = "bubble"
-    bubble.textContent = text
-
-    const time = document.createElement("div")
-    time.className = "msg-time"
-    time.textContent = getTime()
-
-    wrapper.appendChild(bubble)
-    wrapper.appendChild(time)
-    msgs.appendChild(wrapper)
-    msgs.scrollTop = msgs.scrollHeight
+function stepWave(){
+  const next=wPrev
+  for(let r=1;r<ROWS-1;r++)for(let c=1;c<COLS-1;c++){
+    const i=r*COLS+c
+    next[i]=((wCur[i-1]+wCur[i+1]+wCur[i-COLS]+wCur[i+COLS])*DAMP*.5-next[i]*(DAMP*.5-1))*DAMP
   }
+  for(let c=0;c<COLS;c++){next[c]=0;next[(ROWS-1)*COLS+c]=0}
+  for(let r=0;r<ROWS;r++){next[r*COLS]=0;next[r*COLS+COLS-1]=0}
+  wPrev=wCur;wCur=next
+}
 
-  function showTyping() {
-    const msgs = document.getElementById("messages")
-    const wrapper = document.createElement("div")
-    wrapper.className = "msg bot typing"
-    wrapper.id = "typing-indicator"
+function addRip(x,y,small=false){
+  const s=small?.45:1
+  rips.push({x,y,r:3,max:(100+Math.random()*80)*s,a:small?.5:1,sp:(1.4+Math.random())*s,life:1})
+  if(!small){rips.push({x,y,r:5,max:60+Math.random()*40,a:.55,sp:.9+Math.random()*.6});rips.push({x,y,r:2,max:30+Math.random()*20,a:.7,sp:2+Math.random()})}
+}
 
-    const bubble = document.createElement("div")
-    bubble.className = "bubble"
-    bubble.innerHTML = `<div class="typing-dots">
-      <span></span><span></span><span></span>
-    </div>`
+function getWave(x,y){const gc=Math.round(x/GRID_CELL),gr=Math.round(y/GRID_CELL);return(gc>=0&&gc<COLS&&gr>=0&&gr<ROWS)?wCur[gr*COLS+gc]:0}
 
-    wrapper.appendChild(bubble)
-    msgs.appendChild(wrapper)
-    msgs.scrollTop = msgs.scrollHeight
+function spawnFish(){
+  fish=[];const cols=['#FF8C69','#FFB347','#87CEEB','#DDA0DD','#98FB98']
+  for(let i=0;i<4;i++)fish.push({x:PW*(.15+Math.random()*.7),y:PH*(.2+Math.random()*.6),vx:(Math.random()-.5)*.7,vy:(Math.random()-.5)*.3,len:22+Math.random()*14,color:cols[i%cols.length],tail:0,tailSp:.08+Math.random()*.06,fear:0,depth:.3+Math.random()*.5,opacity:.65+Math.random()*.25,turnTimer:60+Math.random()*180})
+}
+function updateFish(){
+  for(const f of fish){
+    f.fear=Math.max(0,f.fear-.008)
+    for(const rp of rips){const dx=f.x-rp.x,dy=f.y-rp.y;if(Math.sqrt(dx*dx+dy*dy)<rp.r+30&&rp.a>.3)f.fear=Math.min(1,f.fear+.15)}
+    const spd=f.fear>.3?1.8:.55;f.x+=f.vx*spd;f.y+=f.vy*spd;f.tail+=f.tailSp*(1+f.fear)
+    if(--f.turnTimer<=0||f.fear>.5){const a=Math.random()*Math.PI*2;f.vx=Math.cos(a)*.7;f.vy=Math.sin(a)*.3;f.turnTimer=f.fear>.5?30+Math.random()*60:80+Math.random()*160;f.fear=Math.max(0,f.fear-.2)}
+    const mg=f.len+10;if(f.x<mg){f.x=mg;f.vx=Math.abs(f.vx)}if(f.x>PW-mg){f.x=PW-mg;f.vx=-Math.abs(f.vx)}if(f.y<PH*.12){f.y=PH*.12;f.vy=Math.abs(f.vy)}if(f.y>PH*.9){f.y=PH*.9;f.vy=-Math.abs(f.vy)}
   }
-
-  function removeTyping() {
-    const el = document.getElementById("typing-indicator")
-    if (el) el.remove()
+}
+function drawFish(c){
+  for(const f of fish){
+    const angle=Math.atan2(f.vy,f.vx),wv=Math.sin(f.tail)*4*(1+f.fear)
+    c.save();c.translate(f.x,f.y);c.rotate(angle);c.globalAlpha=f.opacity
+    c.save();c.translate(f.depth*8,f.depth*4);c.scale(1,.3);c.beginPath();c.ellipse(0,0,f.len*.55,f.len*.22,0,0,Math.PI*2);c.fillStyle='rgba(0,0,0,0.18)';c.fill();c.restore()
+    const bg=c.createLinearGradient(-f.len*.5,0,f.len*.5,0);bg.addColorStop(0,'rgba(0,0,0,0)');bg.addColorStop(.25,f.color+'ee');bg.addColorStop(.7,f.color+'cc');bg.addColorStop(1,'rgba(0,0,0,0)')
+    c.beginPath();c.ellipse(0,wv*.15,f.len*.55,f.len*.22,0,0,Math.PI*2);c.fillStyle=bg;c.fill()
+    c.beginPath();c.moveTo(-f.len*.45,wv*.15);c.lineTo(-f.len*.8,wv*1.2);c.lineTo(-f.len*.8,-wv*1.2);c.closePath();c.fillStyle=f.color+'bb';c.fill()
+    c.beginPath();c.arc(f.len*.28,-f.len*.05,2.5,0,Math.PI*2);c.fillStyle='rgba(0,0,0,0.85)';c.fill()
+    c.restore()
   }
+}
 
-  function checkCrisis(text) {
-    const lower = text.toLowerCase()
-    const isCrisis = crisisWords.some(word => lower.includes(word))
-    if (isCrisis) {
-      document.getElementById("crisis-banner").classList.add("show")
-    }
+function spawnLilies(){
+  lilies=[];const zones=[[.12,.2],[.7,.2],[.2,.72],[.6,.65],[.42,.35]]
+  for(let i=0;i<5;i++){const z=zones[i];lilies.push({x:PW*(z[0]+.04*(Math.random()-.5)),y:PH*(z[1]+.04*(Math.random()-.5)),r:18+Math.random()*10,rot:Math.random()*Math.PI*2,ph:Math.random()*Math.PI*2,sp:.25+Math.random()*.2,hasFlower:Math.random()>.4,flowerColor:['#FFB6C1','#FFD700','#FFF','#FFE4E1'][Math.floor(Math.random()*4)]})}
+}
+function drawLilies(c,now){
+  for(const l of lilies){
+    const bob=Math.sin(now*l.sp+l.ph)*3,rock=Math.cos(now*l.sp*.7+l.ph)*.04,wr=getWave(l.x,l.y)*.4
+    c.save();c.translate(l.x,l.y+bob+wr);c.rotate(l.rot+rock)
+    c.save();c.translate(5,4);c.scale(1,.25);c.beginPath();c.arc(0,0,l.r,0,Math.PI*2);c.fillStyle='rgba(0,0,0,0.2)';c.fill();c.restore()
+    const na=-.3,nb=.3;c.beginPath();c.arc(0,0,l.r,nb,Math.PI*2+na);c.lineTo(0,0);c.closePath()
+    const pg=c.createRadialGradient(-l.r*.2,-l.r*.2,0,0,0,l.r);pg.addColorStop(0,'#52b96e');pg.addColorStop(.5,'#2d8f4e');pg.addColorStop(1,'#1a6635')
+    c.fillStyle=pg;c.fill()
+    if(l.hasFlower){const fr=4+Math.sin(now+l.ph)*1;for(let p=0;p<6;p++){const pa=p/6*Math.PI*2;c.beginPath();c.ellipse(Math.cos(pa)*fr*.9,Math.sin(pa)*fr*.9,fr*.7,fr*.35,pa,0,Math.PI*2);c.fillStyle=l.flowerColor+'ee';c.fill()}c.beginPath();c.arc(0,0,fr*.38,0,Math.PI*2);c.fillStyle='#FFD700';c.fill()}
+    c.restore()
   }
+}
 
-  async function sendMessage() {
-    const input = document.getElementById("input")
-    const text = input.value.trim()
-    if (!text || isThinking) return
-
-    input.value = ""
-    input.style.height = "auto"
-    addMessage(text, "user")
-    checkCrisis(text)
-
-    isThinking = true
-    document.getElementById("send-btn").disabled = true
-    showTyping()
-
-    const messages = [
-      {
-        role: "user",
-        content: SYSTEM_PROMPT + "\n\nAcknowledge these instructions."
-      },
-      {
-        role: "assistant",
-        content: "Understood. I am MentalBridge. I will follow every rule exactly."
-      },
-      ...history,
-      { role: "user", content: text }
-    ]
-
-    try {
-      const response = await fetch(OLLAMA_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "gemma3:4b",
-          messages: messages,
-          stream: false,
-          options: { temperature: 0.7, top_p: 0.9 }
-        })
-      })
-
-      const data = await response.json()
-      const reply = data.message.content
-
-      removeTyping()
-      addMessage(reply, "bot")
-
-      history.push({ role: "user", content: text })
-      history.push({ role: "assistant", content: reply })
-      checkCrisis(reply)
-
-    } catch (error) {
-      removeTyping()
-      addMessage(
-        "I'm having trouble connecting right now. Please make sure Ollama is running.",
-        "bot"
-      )
-    }
-
-    isThinking = false
-    document.getElementById("send-btn").disabled = false
-    input.focus()
+function spawnDflies(){dragonflies=[{x:PW*.3,y:PH*.15,vx:.8,vy:.2,ph:0,spd:.6,wingSp:.28,hover:0,hoverT:0,col:'#7EC8E3'},{x:PW*.7,y:PH*.2,vx:-.6,vy:.1,ph:1.5,spd:.5,wingSp:.22,hover:0,hoverT:0,col:'#B8E0A0'}]}
+function drawDflies(c,now){
+  for(const d of dragonflies){
+    if(--d.hoverT<=0){if(d.hover){d.hover=0;const a=Math.random()*Math.PI*2;d.vx=Math.cos(a)*d.spd;d.vy=Math.sin(a)*d.spd*.5;d.hoverT=60+Math.random()*120}else{d.hover=1;d.vx=0;d.vy=0;d.hoverT=40+Math.random()*80}}
+    if(!d.hover){d.x+=d.vx;d.y+=d.vy}else{d.x+=Math.sin(now*2+d.ph)*.4;d.y+=Math.cos(now*1.3+d.ph)*.2}
+    if(d.x<20)d.x=20;if(d.x>PW-20)d.x=PW-20;if(d.y<10)d.y=10;if(d.y>PH*.35)d.y=PH*.35
+    const sz=7;c.save();c.translate(d.x,d.y);c.globalAlpha=.82
+    const wing=Math.sin(now*18*d.wingSp)*Math.PI*.45
+    const wg=c.createLinearGradient(-sz*2,0,sz*2,0);wg.addColorStop(0,d.col+'44');wg.addColorStop(.5,d.col+'99');wg.addColorStop(1,d.col+'44');c.fillStyle=wg
+    ;[1,-1].forEach(side=>{;[[wing,-.6],[wing*1.1,.4]].forEach(([wa,oy])=>{c.save();c.rotate(wa*side);c.beginPath();c.ellipse(side*sz,oy*sz,sz,sz*.42,0,0,Math.PI*2);c.fill();c.restore()})})
+    c.beginPath();c.ellipse(0,0,sz*.28,sz*.9,0,0,Math.PI*2);c.fillStyle=d.col+'dd';c.fill()
+    c.beginPath();c.arc(0,-sz*.9,sz*.22,0,Math.PI*2);c.fillStyle=d.col;c.fill()
+    c.restore()
   }
+}
+
+function spawnPollen(){pollen=[];for(let i=0;i<18;i++)pollen.push({x:Math.random()*PW,y:Math.random()*PH,vx:(Math.random()-.5)*.18,vy:(Math.random()-.5)*.08,r:.8+Math.random()*1.4,a:.2+Math.random()*.4,col:['#FFD700','#FFF8DC','#E8FFE8','#FFEEDD'][Math.floor(Math.random()*4)],ph:Math.random()*Math.PI*2})}
+function drawPollen(c,now){
+  pollen=pollen.filter(p=>p.a>.02)
+  for(const p of pollen){p.x+=p.vx+Math.sin(now*.5+p.ph)*.06;p.y+=p.vy+Math.cos(now*.4+p.ph)*.04;if(p.x<0||p.x>PW)p.vx*=-.7;if(p.y<0||p.y>PH)p.vy*=-.7;c.beginPath();c.arc(p.x,p.y,p.r,0,Math.PI*2);c.fillStyle=p.col;c.globalAlpha=p.a;c.fill();c.globalAlpha=1}
+}
+
+function pLoop(){
+  if(AG!=='pond'){pRAF=null;return}
+  const now=Date.now()/1000,c=PX_,W=PW,H=PH
+  stepWave()
+  const wbg=c.createLinearGradient(0,0,W,H);wbg.addColorStop(0,'#07291a');wbg.addColorStop(.5,'#0d3d22');wbg.addColorStop(1,'#061710');c.fillStyle=wbg;c.fillRect(0,0,W,H)
+  const edgeG=c.createRadialGradient(W*.5,H*.5,H*.28,W*.5,H*.5,H*.8);edgeG.addColorStop(0,'rgba(0,0,0,0)');edgeG.addColorStop(1,'rgba(0,0,0,0.42)');c.fillStyle=edgeG;c.fillRect(0,0,W,H)
+  c.save();for(let i=0;i<14;i++){const ys=((now*12+i*H/13)%H),a=.025+.018*Math.abs(Math.sin(now*.7+i*.8));const sg=c.createLinearGradient(0,ys,W,ys);sg.addColorStop(0,'transparent');sg.addColorStop(.5,'rgba(140,225,180,'+a+')');sg.addColorStop(1,'transparent');c.fillStyle=sg;c.fillRect(0,ys-.8,W,1.6)};c.restore()
+  rips=rips.filter(rp=>rp.a>.008)
+  for(const rp of rips){c.beginPath();c.arc(rp.x,rp.y,rp.r,0,Math.PI*2);c.strokeStyle='rgba(160,235,200,'+rp.a*.8+')';c.lineWidth=2.2;c.stroke();rp.r+=rp.sp;rp.a=Math.max(0,1-rp.r/rp.max)}
+  updateFish();drawFish(c);drawLilies(c,now);drawDflies(c,now);drawPollen(c,now)
+  const vig=c.createRadialGradient(W*.5,H*.5,H*.22,W*.5,H*.5,H*.72);vig.addColorStop(0,'rgba(0,0,0,0)');vig.addColorStop(1,'rgba(0,20,8,0.38)');c.fillStyle=vig;c.fillRect(0,0,W,H)
+  pRAF=requestAnimationFrame(pLoop)
+}
+
+// ── POP THOUGHTS ──
+const CT=['I am safe','Breathe','This will pass','I am enough','One step','I am loved','Be gentle','Present','Peace','Let go','I belong','Soften','Right here','Okay']
+const AT=['What if…','Too much','Not enough','Will I fail?','Everyone sees',"Can't do this","What will they say",'I am behind','Too slow']
+let bRun=false,bSc=0,bIv=null,bTick=null,bT=90
+
+function startBubs(){
+  document.getElementById('bstrt').style.display='none'
+  bRun=true;bSc=0;bT=90;document.getElementById('bnum').textContent='0'
+  spawnB();spawnB();spawnB()
+  bIv=setInterval(spawnB,1500)
+  bTick=setInterval(()=>{bT--;const m=Math.floor(bT/60),s=bT%60;document.getElementById('btmr').textContent=bT>0?m+':'+(String(s).padStart(2,'0'))+' remaining':'✓ '+bSc+' thoughts released 🌿';if(bT<=0){clearInterval(bIv);clearInterval(bTick);bRun=false}},1000)
+}
+function spawnB(){
+  if(!bRun)return
+  const field=document.getElementById('bfield'),calm=Math.random()>.38
+  const text=calm?CT[Math.floor(Math.random()*CT.length)]:AT[Math.floor(Math.random()*AT.length)]
+  const el=document.createElement('div');el.className='tb '+(calm?'calm':'anxious');el.textContent=text
+  const sz=70+Math.floor(Math.random()*36),lft=4+Math.random()*72,dur=8+Math.random()*6,dx=((Math.random()-.5)*80).toFixed(0)
+  el.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+lft+'%;bottom:-'+(sz+10)+'px;--dx:'+dx+'px;animation-duration:'+dur+'s;'
+  el.addEventListener('click',()=>{
+    const rect=el.getBoundingClientRect(),fr=field.getBoundingClientRect()
+    const px=rect.left-fr.left+rect.width/2,py=rect.top-fr.top
+    const fx=document.createElement('div');fx.className='popfx';fx.textContent=calm?'+1 ✨':'🌬️';fx.style.left=px+'px';fx.style.top=py+'px';field.appendChild(fx);setTimeout(()=>fx.remove(),700)
+    if(calm){bSc++;document.getElementById('bnum').textContent=bSc}
+    el.style.transition='transform .15s,opacity .15s';el.style.transform='scale(0)';el.style.opacity='0'
+    setTimeout(()=>{if(el.parentNode)el.remove()},160)
+  })
+  field.appendChild(el);setTimeout(()=>{if(el.parentNode)el.remove()},(dur+1)*1000)
+}
+
+// ── GROUNDING ──
+const GC={'5':5,'4':4,'3':3,'2':2,'1':1},GR={'5':0,'4':0,'3':0,'2':0,'1':0}
+const GEM={'5':['👁','🪟','🌿','📖','☕'],'4':['🪑','🧢','📱','🧴'],'3':['🎵','🌬️','🚗'],'2':['☕','🌸'],'1':['🍵']}
+function gk(e,n){if(e.key==='Enter')ga(n)}
+function ga(n){
+  const inp=document.getElementById('g'+n+'i'),val=inp.value.trim()
+  if(!val||GR[n]>=GC[n])return
+  GR[n]++;const em=GEM[n][Math.floor(Math.random()*GEM[n].length)]
+  const chip=document.createElement('div');chip.className='gchip';chip.innerHTML='<span>'+em+'</span>'+val
+  document.getElementById('g'+n+'c').appendChild(chip)
+  document.getElementById('g'+n+'b').textContent=GR[n]+'/'+GC[n]
+  inp.value='';inp.focus()
+  if(GR[n]>=GC[n]){document.getElementById('gs'+n).classList.add('done');document.getElementById('g'+n+'a').disabled=true;chkGround()}
+}
+function chkGround(){
+  if(Object.keys(GC).every(k=>GR[k]>=GC[k])){const e=document.getElementById('gcomp');e.classList.add('on');e.scrollIntoView({behavior:'smooth'})}
+}
 </script>
 </body>
 </html>
