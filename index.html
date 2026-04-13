@@ -461,7 +461,7 @@ async function sendMsg(){
   thinking=true;document.getElementById('sbtn').disabled=true;showTy()
   const messages=[{role:'user',content:SYS+'\n\nAcknowledge.'},{role:'assistant',content:'Understood. I am MentalBridge.'},...hist,{role:'user',content:text}]
   try{
-    const res=await fetch('http://localhost:11434/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'mentalbridge',messages,stream:false,options:{temperature:.7,top_p:.9}})})
+    const res=await fetch('http://localhost:11434/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'gemma4:e2b',messages,stream:false,options:{temperature:.7,top_p:.9}})})
     const data=await res.json()
     let reply=data.message.content.replace(/<end_of_turn>/g,'').replace(/<\/s>/g,'').trim()
     const sentences=reply.match(/[^.!?]+[.!?]+/g)
