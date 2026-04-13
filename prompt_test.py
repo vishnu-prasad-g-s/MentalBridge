@@ -80,7 +80,7 @@ def chat_with_mentalbridge(user_message, conversation_history):
     # This is the data we send to Ollama
     # Think of it like filling out a form before making a phone call
     payload = {
-        "model": "gemma3:4b",  # Which model to use
+        "model": "gemma4:e2b",  # ← Gemma 4, matches your fine-tuned model
         "messages": conversation_history,  # The full conversation so far
         "system": SYSTEM_PROMPT,  # The rules we defined above
         "stream": False  # Wait for full response before showing
