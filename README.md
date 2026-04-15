@@ -170,7 +170,7 @@ MentalBridge is built with explicit ethical guardrails:
 
 **Vishnu Prasad GS**
 - HuggingFace: [vishnuprasadgs](https://huggingface.co/vishnuprasadgs)
-- GitHub: [YOUR_GITHUB_USERNAME]
+- GitHub: [vishnu-prasad-g-s](https://github.com/vishnu-prasad-g-s)
 
 ---
 
