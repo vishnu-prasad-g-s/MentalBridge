@@ -121,7 +121,7 @@ MentalBridge uses **Gemma 4 E2B** as the base model with a custom system prompt 
 We also fine-tuned a **Gemma 4 E2B LoRA adapter** using **Unsloth** on 192 Indian mental health conversations — 177 from a Kaggle mental health dataset and 15 handcrafted examples covering uniquely Indian scenarios in Tamil, Hindi and English.
 
 **Fine-tuning results:**
-- Training loss: **8.72 → 1.41** over 72 steps
+- Training loss: **7.55 → 0.84** over 72 steps
 - 3 epochs, learning rate 2e-4, LoRA rank 16
 - Published on HuggingFace: [vishnuprasadgs/mentalbridge-gemma4-E2B-finetuned](https://huggingface.co/vishnuprasadgs/mentalbridge-gemma4-E2B-finetuned)
 
