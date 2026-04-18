@@ -118,6 +118,7 @@ ollama serve
 # Or serve it:
 python3 -m http.server 8080
 # Then visit: http://localhost:8080
+open -a "Google Chrome" http://localhost:8080
 ```
 
 ### Using the Fine-tuned Model (Advanced)
