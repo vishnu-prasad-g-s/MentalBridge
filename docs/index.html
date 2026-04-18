@@ -4,69 +4,181 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>MentalBridge — Offline AI Mental Health Companion for India</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'DM Sans',sans-serif;background:#f7f6f3;color:#111;}
-.hero{background:linear-gradient(135deg,#2d6a4f,#52D68A);padding:80px 24px;text-align:center;color:white;}
-.logo{font-size:48px;margin-bottom:16px;}
-.hero h1{font-family:'DM Serif Display',serif;font-size:42px;margin-bottom:16px;letter-spacing:-.02em;}
-.hero p{font-size:18px;opacity:.88;max-width:580px;margin:0 auto 32px;line-height:1.7;}
-.badges{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:40px;}
-.badge{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);padding:6px 16px;border-radius:99px;font-size:13px;font-weight:600;}
-.download-btn{display:inline-flex;align-items:center;gap:10px;background:white;color:#2d6a4f;padding:16px 36px;border-radius:14px;font-size:16px;font-weight:700;text-decoration:none;box-shadow:0 8px 32px rgba(0,0,0,.2);transition:all .2s;}
-.download-btn:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,.25);}
-.stats{display:flex;gap:0;justify-content:center;background:white;border-bottom:2px solid #e8e6df;}
-.stat{flex:1;max-width:220px;padding:32px 24px;text-align:center;border-right:1px solid #e8e6df;}
+:root{
+  --green:#2d6a4f;--green-light:#e8f4ee;--green-dark:#1b4332;
+  --accent:#52D68A;--text:#111;--text2:#555;--border:#e8e6df;
+  --surface:#fff;--bg:#f7f6f3;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;}
+a{color:var(--green);text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;}
+.nav-brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;color:var(--text);}
+.nav-logo{width:34px;height:34px;background:linear-gradient(135deg,var(--green),var(--accent));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.nav-links{display:flex;align-items:center;gap:24px;font-size:14px;font-weight:600;}
+.nav-links a{color:var(--text2);}
+.nav-links a:hover{color:var(--green);text-decoration:none;}
+.nav-btn{background:var(--green);color:white!important;padding:8px 20px;border-radius:99px;font-weight:700!important;}
+.nav-btn:hover{background:var(--green-dark);text-decoration:none!important;}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#0d3320 0%,#1b5e38 40%,#2d8a55 100%);padding:100px 24px 80px;text-align:center;color:white;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
+.hero-inner{position:relative;max-width:720px;margin:0 auto;}
+.hero-logo{width:72px;height:72px;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.25);border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 24px;}
+.hero h1{font-family:'DM Serif Display',serif;font-size:52px;line-height:1.1;margin-bottom:20px;letter-spacing:-.02em;}
+.hero h1 em{font-style:italic;color:var(--accent);}
+.hero p{font-size:18px;opacity:.88;max-width:560px;margin:0 auto 36px;line-height:1.75;}
+.badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:44px;}
+.badge{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);padding:7px 16px;border-radius:99px;font-size:13px;font-weight:600;backdrop-filter:blur(4px);}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:white;color:var(--green);padding:16px 32px;border-radius:14px;font-size:16px;font-weight:800;box-shadow:0 8px 32px rgba(0,0,0,.25);transition:all .2s;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,.3);text-decoration:none;}
+.btn-secondary{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.3);color:white;padding:16px 28px;border-radius:14px;font-size:15px;font-weight:700;transition:all .2s;}
+.btn-secondary:hover{background:rgba(255,255,255,.2);text-decoration:none;}
+
+/* STATS BAR */
+.stats{display:flex;background:white;border-bottom:1px solid var(--border);}
+.stat{flex:1;padding:28px 20px;text-align:center;border-right:1px solid var(--border);}
 .stat:last-child{border-right:none;}
-.stat-num{font-family:'DM Serif Display',serif;font-size:36px;color:#2d6a4f;margin-bottom:6px;}
-.stat-label{font-size:13px;color:#666;font-weight:600;}
-.section{padding:64px 24px;max-width:900px;margin:0 auto;}
-.section h2{font-family:'DM Serif Display',serif;font-size:32px;margin-bottom:12px;color:#111;}
-.section p{font-size:16px;color:#444;line-height:1.7;margin-bottom:24px;}
-.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-top:32px;}
-.feature{background:white;border:1.5px solid #e8e6df;border-radius:20px;padding:24px;transition:all .2s;}
-.feature:hover{box-shadow:0 8px 32px rgba(0,0,0,.08);}
-.feature-icon{font-size:32px;margin-bottom:12px;}
-.feature h3{font-size:16px;font-weight:700;color:#111;margin-bottom:8px;}
-.feature p{font-size:14px;color:#666;line-height:1.6;}
-.steps{counter-reset:step;}
-.step{display:flex;gap:20px;margin-bottom:28px;align-items:flex-start;}
-.step-num{width:40px;height:40px;background:#2d6a4f;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;flex-shrink:0;}
-.step-content h3{font-size:16px;font-weight:700;margin-bottom:6px;}
-.step-content p{font-size:14px;color:#666;line-height:1.6;}
-.code{background:#111;color:#74c69d;padding:10px 16px;border-radius:10px;font-family:monospace;font-size:13px;margin-top:8px;display:block;}
-.helplines{display:flex;gap:16px;flex-wrap:wrap;margin-top:24px;}
-.helpline{background:#e8f4ee;border:1.5px solid #b7e4c7;border-radius:14px;padding:16px 20px;flex:1;min-width:200px;}
-.helpline h4{font-size:14px;font-weight:700;color:#1b4332;margin-bottom:4px;}
-.helpline p{font-size:13px;color:#2d6a4f;font-weight:600;}
-.tech{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px;}
-.tech-badge{background:#f0efe9;border:1.5px solid #e8e6df;padding:8px 16px;border-radius:99px;font-size:13px;font-weight:600;color:#444;}
-.footer{background:#111;color:#888;text-align:center;padding:32px 24px;font-size:13px;}
-.footer a{color:#74c69d;text-decoration:none;}
-.video-wrap{margin-top:32px;border-radius:20px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.12);}
-.video-wrap iframe{width:100%;aspect-ratio:16/9;border:none;}
-.crisis-note{background:#fff3f3;border:1.5px solid #ffcdd2;border-radius:14px;padding:20px 24px;margin-top:24px;}
-.crisis-note h4{color:#c1121f;font-size:14px;font-weight:700;margin-bottom:6px;}
-.crisis-note p{font-size:13px;color:#c1121f;line-height:1.6;}
+.stat-num{font-family:'DM Serif Display',serif;font-size:32px;color:var(--green);margin-bottom:4px;}
+.stat-label{font-size:12px;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:.04em;}
+
+/* SECTIONS */
+.section{padding:80px 24px;max-width:960px;margin:0 auto;}
+.section-tag{display:inline-block;background:var(--green-light);color:var(--green);padding:5px 14px;border-radius:99px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:14px;}
+.section h2{font-family:'DM Serif Display',serif;font-size:36px;margin-bottom:14px;letter-spacing:-.01em;}
+.section > p{font-size:16px;color:var(--text2);max-width:640px;line-height:1.75;margin-bottom:40px;}
+
+/* FEATURES */
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;}
+.feature{background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:26px;transition:all .25s;}
+.feature:hover{box-shadow:0 8px 32px rgba(0,0,0,.08);transform:translateY(-2px);}
+.feature-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:14px;}
+.feature-icon.green{background:var(--green-light);}
+.feature-icon.blue{background:#e8f0fe;}
+.feature-icon.purple{background:#f0ebff;}
+.feature-icon.amber{background:#fff8e6;}
+.feature-icon.pink{background:#ffeef3;}
+.feature-icon.teal{background:#e6faf5;}
+.feature h3{font-size:15px;font-weight:700;margin-bottom:8px;}
+.feature p{font-size:13.5px;color:var(--text2);line-height:1.65;}
+
+/* INSTALL TABS */
+.install-section{background:var(--surface);border-radius:0;padding:80px 24px;}
+.install-inner{max-width:960px;margin:0 auto;}
+.os-tabs{display:flex;gap:8px;margin-bottom:32px;}
+.os-tab{padding:10px 24px;border-radius:99px;border:2px solid var(--border);background:var(--bg);font-size:14px;font-weight:700;color:var(--text2);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px;}
+.os-tab.active{background:var(--green);color:white;border-color:var(--green);}
+.os-panel{display:none;}
+.os-panel.active{display:block;}
+.steps{display:flex;flex-direction:column;gap:0;}
+.step{display:flex;gap:0;position:relative;}
+.step:not(:last-child)::after{content:'';position:absolute;left:19px;top:44px;bottom:0;width:2px;background:var(--border);}
+.step-left{display:flex;flex-direction:column;align-items:center;margin-right:20px;flex-shrink:0;}
+.step-num{width:40px;height:40px;background:var(--green);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex-shrink:0;z-index:1;}
+.step-content{padding-bottom:32px;flex:1;}
+.step-content h3{font-size:16px;font-weight:700;margin-bottom:6px;margin-top:8px;}
+.step-content p{font-size:14px;color:var(--text2);line-height:1.65;margin-bottom:10px;}
+.step-content a{color:var(--green);font-weight:600;}
+.code{background:#0d1117;color:#7ee787;padding:12px 18px;border-radius:10px;font-family:'Courier New',monospace;font-size:13px;display:block;margin-top:10px;position:relative;border:1px solid #30363d;}
+.code-wrap{position:relative;}
+.copy-btn{position:absolute;top:8px;right:10px;background:#21262d;border:1px solid #30363d;color:#8b949e;padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;transition:all .2s;}
+.copy-btn:hover{background:#30363d;color:white;}
+.note{background:var(--green-light);border:1.5px solid #b7e4c7;border-radius:12px;padding:14px 18px;font-size:13px;color:var(--green-dark);margin-top:14px;line-height:1.6;}
+.note strong{font-weight:700;}
+.win-note{background:#fff8e6;border:1.5px solid #ffd27f;border-radius:12px;padding:14px 18px;font-size:13px;color:#7a4f00;margin-top:14px;line-height:1.6;}
+
+/* TECH STACK */
+.tech-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:32px;}
+.tech-card{background:var(--surface);border:1.5px solid var(--border);border-radius:16px;padding:20px;display:flex;align-items:center;gap:14px;}
+.tech-icon{font-size:28px;flex-shrink:0;}
+.tech-name{font-size:14px;font-weight:700;color:var(--text);}
+.tech-desc{font-size:12px;color:var(--text2);margin-top:2px;}
+
+/* HELPLINES */
+.helplines{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:28px;}
+.helpline{background:var(--green-light);border:1.5px solid #b7e4c7;border-radius:16px;padding:18px 20px;}
+.helpline h4{font-size:14px;font-weight:800;color:var(--green-dark);margin-bottom:6px;}
+.helpline .phone{font-size:18px;font-weight:800;color:var(--green);margin-bottom:4px;}
+.helpline .hours{font-size:12px;color:var(--text2);font-weight:600;}
+.crisis-card{background:#fff0f0;border:1.5px solid #ffcdd2;border-radius:16px;padding:20px 24px;margin-top:20px;display:flex;gap:16px;align-items:flex-start;}
+.crisis-card .ci{font-size:24px;flex-shrink:0;}
+.crisis-card h4{font-size:14px;font-weight:700;color:#c1121f;margin-bottom:4px;}
+.crisis-card p{font-size:13px;color:#c1121f;line-height:1.6;}
+
+/* LINKS SECTION */
+.links-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px;}
+.link-card{flex:1;min-width:200px;background:var(--surface);border:1.5px solid var(--border);border-radius:16px;padding:20px;text-align:center;transition:all .2s;text-decoration:none;color:var(--text);}
+.link-card:hover{box-shadow:0 8px 24px rgba(0,0,0,.08);transform:translateY(-2px);text-decoration:none;}
+.link-card .lc-icon{font-size:28px;margin-bottom:10px;}
+.link-card .lc-name{font-size:14px;font-weight:700;margin-bottom:4px;}
+.link-card .lc-desc{font-size:12px;color:var(--text2);}
+
+/* FOOTER */
+.footer{background:#0d1117;color:#8b949e;text-align:center;padding:48px 24px;}
+.footer .fl{display:flex;justify-content:center;gap:24px;margin-bottom:20px;flex-wrap:wrap;}
+.footer .fl a{color:#58a6ff;font-size:14px;font-weight:600;}
+.footer p{font-size:13px;line-height:1.8;}
+.footer .flag{font-size:20px;}
+
+/* DEMO VIDEO */
+.video-section{background:#0d1117;padding:80px 24px;}
+.video-inner{max-width:800px;margin:0 auto;text-align:center;}
+.video-inner h2{font-family:'DM Serif Display',serif;font-size:36px;color:white;margin-bottom:14px;}
+.video-inner p{font-size:16px;color:#8b949e;margin-bottom:32px;}
+.video-wrap{border-radius:20px;overflow:hidden;box-shadow:0 20px 80px rgba(0,0,0,.6);border:1px solid #30363d;}
+.video-wrap iframe{width:100%;aspect-ratio:16/9;border:none;display:block;}
+
+@media(max-width:600px){
+  .hero h1{font-size:34px;}
+  .stats{flex-wrap:wrap;}
+  .stat{flex:1 1 50%;border-bottom:1px solid var(--border);}
+  .nav-links{display:none;}
+  .os-tabs{flex-wrap:wrap;}
+}
 </style>
 </head>
 <body>
 
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand">
+    <div class="nav-logo">🌉</div>
+    MentalBridge
+  </div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#install">Install</a>
+    <a href="#helplines">Helplines</a>
+    <a href="#tech">Tech</a>
+    <a href="https://github.com/vishnu-prasad-g-s/MentalBridge" class="nav-btn">GitHub</a>
+  </div>
+</nav>
+
 <!-- HERO -->
 <div class="hero">
-  <div class="logo">🌉</div>
-  <h1>MentalBridge</h1>
-  <p>An offline AI mental health companion for India — built on Gemma 4, running entirely on your device. No server. No data leaving. Just someone to listen.</p>
-  <div class="badges">
-    <span class="badge">🤖 Gemma 4 E2B</span>
-    <span class="badge">📵 100% Offline</span>
-    <span class="badge">🗣️ Tamil · Hindi · Telugu · Kannada</span>
-    <span class="badge">🔒 Zero Data Stored</span>
+  <div class="hero-inner">
+    <div class="hero-logo">🌉</div>
+    <h1>Mental health support,<br/><em>finally offline.</em></h1>
+    <p>An AI companion built on Gemma 4 that runs entirely on your device. No server. No data leaving. No internet needed. Just someone to listen — in your language.</p>
+    <div class="badges">
+      <span class="badge">🤖 Gemma 4 E2B</span>
+      <span class="badge">📵 100% Offline</span>
+      <span class="badge">🇮🇳 Built for India</span>
+      <span class="badge">🗣️ Tamil · Hindi · Telugu · Kannada</span>
+      <span class="badge">🔒 Zero Data Stored</span>
+    </div>
+    <div class="hero-btns">
+      <a href="mentalbridge_v1.zip" class="btn-primary">⬇️ Download for Mac</a>
+      <a href="#install" class="btn-secondary">📖 Setup Guide</a>
+    </div>
   </div>
-  <a class="download-btn" href="https://github.com/vishnu-prasad-g-s/MentalBridge/releases/download/v1.0/mentalbridge_v1.zip">
-    ⬇️ Download MentalBridge
-  </a>
 </div>
 
 <!-- STATS -->
@@ -74,134 +186,298 @@ body{font-family:'DM Sans',sans-serif;background:#f7f6f3;color:#111;}
   <div class="stat"><div class="stat-num">197M</div><div class="stat-label">Indians with mental health conditions</div></div>
   <div class="stat"><div class="stat-num">1 in 10</div><div class="stat-label">Ever receive help</div></div>
   <div class="stat"><div class="stat-num">1:200K</div><div class="stat-label">Psychiatrist to patient ratio</div></div>
-  <div class="stat"><div class="stat-num">0</div><div class="stat-label">Bytes of data sent to servers</div></div>
+  <div class="stat"><div class="stat-num">0 bytes</div><div class="stat-label">Data sent to any server</div></div>
 </div>
 
-<!-- ABOUT -->
-<div class="section">
-  <h2>What is MentalBridge?</h2>
-  <p>MentalBridge is a mental health first-aid companion that runs entirely on your device using Google's Gemma 4 model via Ollama. It supports Tamil, Hindi, Telugu, Kannada and English — automatically detecting your language. Every conversation stays on your device forever.</p>
-  <p>It was built for the 197 million Indians who suffer in silence — not because they don't want help, but because saying the words out loud feels impossible. MentalBridge gives them a safe first conversation.</p>
-
+<!-- FEATURES -->
+<div class="section" id="features">
+  <div class="section-tag">What it does</div>
+  <h2>Everything a first conversation needs</h2>
+  <p>MentalBridge was designed around one insight — the hardest step is saying the words out loud for the very first time.</p>
   <div class="features">
     <div class="feature">
-      <div class="feature-icon">💬</div>
+      <div class="feature-icon green">💬</div>
       <h3>Warm AI Chat</h3>
-      <p>Gemma 4 responds warmly in your language. Short sentences. One gentle question. No clinical jargon.</p>
+      <p>Gemma 4 responds warmly in your language. Short sentences. One gentle question. No clinical jargon. Like a trusted older sibling.</p>
     </div>
     <div class="feature">
-      <div class="feature-icon">📵</div>
+      <div class="feature-icon blue">📵</div>
       <h3>100% Offline</h3>
-      <p>Everything runs on your device via Ollama. Turn off WiFi — it still works. Your words never leave your laptop.</p>
+      <p>Everything runs on your device via Ollama. Turn off WiFi — it still works. Your words never leave your laptop. Ever.</p>
     </div>
     <div class="feature">
-      <div class="feature-icon">🗣️</div>
+      <div class="feature-icon purple">🗣️</div>
       <h3>Multilingual</h3>
-      <p>Tamil, Hindi, Telugu, Kannada, English. Type in your language and get a response in the same language.</p>
+      <p>Tamil, Hindi, Telugu, Kannada, English. Type in your language and get a response in the exact same language automatically.</p>
     </div>
     <div class="feature">
-      <div class="feature-icon">🚨</div>
+      <div class="feature-icon pink">🚨</div>
       <h3>Crisis Detection</h3>
-      <p>Detects distress signals and immediately surfaces Indian helplines — iCall, Vandrevala Foundation.</p>
+      <p>Instantly detects distress signals and surfaces Indian helplines — iCall, Vandrevala Foundation — not American numbers.</p>
     </div>
     <div class="feature">
-      <div class="feature-icon">🫧</div>
+      <div class="feature-icon teal">🫧</div>
       <h3>Breathing Exercise</h3>
-      <p>Guided 4-7-8 breathing with real-time animation. Clinically proven to reduce acute anxiety.</p>
+      <p>Guided 4-7-8 breathing with animated real-time visual. Clinically proven to reduce acute anxiety in minutes.</p>
     </div>
     <div class="feature">
-      <div class="feature-icon">🌊</div>
+      <div class="feature-icon amber">🌊</div>
       <h3>Calm Space</h3>
-      <p>Ripple Pond physics simulation, Pop Your Thoughts, and 5-4-3-2-1 Grounding — all therapeutic techniques.</p>
+      <p>Ripple Pond wave physics, Pop Your Thoughts (ACT therapy), and 5-4-3-2-1 Grounding — all evidence-based techniques.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon green">📊</div>
+      <h3>Mood Tracker</h3>
+      <p>Log your mood daily with a note. Track patterns over time to understand your emotional landscape better.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon blue">🔒</div>
+      <h3>Privacy First</h3>
+      <p>No account. No login. No analytics. No data collection. The privacy is not a feature — it is the entire point.</p>
     </div>
   </div>
 </div>
 
-<!-- HOW TO RUN -->
-<div class="section" style="background:white;max-width:100%;padding:64px 24px;">
-<div style="max-width:900px;margin:0 auto;">
-  <h2>How to Run It</h2>
-  <p>MentalBridge runs locally on your laptop. Setup takes about 5 minutes.</p>
+<!-- INSTALL -->
+<div class="install-section" id="install">
+  <div class="install-inner">
+    <div class="section-tag">Setup guide</div>
+    <h2 style="font-family:'DM Serif Display',serif;font-size:36px;margin-bottom:14px;">Get running in 4 steps</h2>
+    <p style="font-size:16px;color:var(--text2);margin-bottom:32px;">Choose your operating system:</p>
 
-  <div class="steps">
-    <div class="step">
-      <div class="step-num">1</div>
-      <div class="step-content">
-        <h3>Install Ollama</h3>
-        <p>Download and install Ollama from <a href="https://ollama.com" style="color:#2d6a4f;">ollama.com</a> — available for Mac, Windows and Linux.</p>
+    <div class="os-tabs">
+      <div class="os-tab active" onclick="switchOS('mac',this)">🍎 macOS</div>
+      <div class="os-tab" onclick="switchOS('win',this)">🪟 Windows</div>
+    </div>
+
+    <!-- MAC -->
+    <div class="os-panel active" id="os-mac">
+      <div class="steps">
+        <div class="step">
+          <div class="step-left"><div class="step-num">1</div></div>
+          <div class="step-content">
+            <h3>Install Ollama</h3>
+            <p>Download and install Ollama — the engine that runs Gemma 4 locally on your Mac.</p>
+            <a href="https://ollama.com/download" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:var(--green);color:white;padding:10px 20px;border-radius:10px;font-weight:700;font-size:14px;margin-top:8px;">Download Ollama for Mac →</a>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-left"><div class="step-num">2</div></div>
+          <div class="step-content">
+            <h3>Download Gemma 4 E2B</h3>
+            <p>Open Terminal (search "Terminal" in Spotlight) and run this command. It downloads Gemma 4 — about 7.2GB, takes a few minutes.</p>
+            <div class="code-wrap">
+              <code class="code">ollama pull gemma4:e2b</code>
+              <button class="copy-btn" onclick="copyCode(this,'ollama pull gemma4:e2b')">Copy</button>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-left"><div class="step-num">3</div></div>
+          <div class="step-content">
+            <h3>Download MentalBridge</h3>
+            <p>Download the ZIP file, unzip it. Then right-click the unzipped folder and select <strong>"New Terminal at Folder"</strong>. Run:</p>
+            <div class="code-wrap">
+              <code class="code">bash START.sh</code>
+              <button class="copy-btn" onclick="copyCode(this,'bash START.sh')">Copy</button>
+            </div>
+            <a href="mentalbridge_v1.zip" style="display:inline-flex;align-items:center;gap:6px;background:var(--green);color:white;padding:10px 20px;border-radius:10px;font-weight:700;font-size:14px;margin-top:12px;">⬇️ Download ZIP</a>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-left"><div class="step-num">4</div></div>
+          <div class="step-content">
+            <h3>Open in browser</h3>
+            <p>MentalBridge opens automatically in your browser. If it doesn't, open Chrome or Safari and go to:</p>
+            <div class="code-wrap">
+              <code class="code">http://localhost:8080</code>
+              <button class="copy-btn" onclick="copyCode(this,'http://localhost:8080')">Copy</button>
+            </div>
+            <div class="note">✅ <strong>You're all set.</strong> MentalBridge runs completely offline from this point. No internet needed.</div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="step">
-      <div class="step-num">2</div>
-      <div class="step-content">
-        <h3>Download Gemma 4</h3>
-        <p>Run this command once to download the Gemma 4 E2B model (7.2GB):</p>
-        <code class="code">ollama pull gemma4:e2b</code>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num">3</div>
-      <div class="step-content">
-        <h3>Download MentalBridge</h3>
-        <p>Download the ZIP file above, unzip it, and double-click START.sh</p>
-        <code class="code">bash START.sh</code>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num">4</div>
-      <div class="step-content">
-        <h3>Open in browser</h3>
-        <p>MentalBridge opens automatically at:</p>
-        <code class="code">http://localhost:8080</code>
+
+    <!-- WINDOWS -->
+    <div class="os-panel" id="os-win">
+      <div class="steps">
+        <div class="step">
+          <div class="step-left"><div class="step-num">1</div></div>
+          <div class="step-content">
+            <h3>Install Ollama</h3>
+            <p>Download and install Ollama for Windows. Run the installer and follow the setup wizard.</p>
+            <a href="https://ollama.com/download/windows" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:var(--green);color:white;padding:10px 20px;border-radius:10px;font-weight:700;font-size:14px;margin-top:8px;">Download Ollama for Windows →</a>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-left"><div class="step-num">2</div></div>
+          <div class="step-content">
+            <h3>Download Gemma 4 E2B</h3>
+            <p>Open <strong>Command Prompt</strong> (search "cmd" in Start menu) and run:</p>
+            <div class="code-wrap">
+              <code class="code">ollama pull gemma4:e2b</code>
+              <button class="copy-btn" onclick="copyCode(this,'ollama pull gemma4:e2b')">Copy</button>
+            </div>
+            <div class="win-note">⚠️ This downloads 7.2GB. Make sure you have enough disk space and a stable internet connection.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-left"><div class="step-num">3</div></div>
+          <div class="step-content">
+            <h3>Download MentalBridge</h3>
+            <p>Download the ZIP file and unzip it. Then open <strong>Command Prompt</strong>, navigate to the folder and run:</p>
+            <div class="code-wrap">
+              <code class="code">cd path\to\mentalbridge_download</code>
+              <button class="copy-btn" onclick="copyCode(this,'cd path\\to\\mentalbridge_download')">Copy</button>
+            </div>
+            <div class="code-wrap" style="margin-top:8px;">
+              <code class="code">python -m http.server 8080</code>
+              <button class="copy-btn" onclick="copyCode(this,'python -m http.server 8080')">Copy</button>
+            </div>
+            <p style="margin-top:10px;font-size:13px;color:var(--text2);">In a second Command Prompt window run:</p>
+            <div class="code-wrap">
+              <code class="code">set OLLAMA_ORIGINS=* && ollama serve</code>
+              <button class="copy-btn" onclick="copyCode(this,'set OLLAMA_ORIGINS=* && ollama serve')">Copy</button>
+            </div>
+            <a href="mentalbridge_v1.zip" style="display:inline-flex;align-items:center;gap:6px;background:var(--green);color:white;padding:10px 20px;border-radius:10px;font-weight:700;font-size:14px;margin-top:12px;">⬇️ Download ZIP</a>
+            <div class="win-note" style="margin-top:12px;">💡 <strong>Python required.</strong> If you don't have Python, download it from <a href="https://python.org" target="_blank">python.org</a> and make sure to check "Add to PATH" during installation.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-left"><div class="step-num">4</div></div>
+          <div class="step-content">
+            <h3>Open in browser</h3>
+            <p>Open Chrome or Edge and go to:</p>
+            <div class="code-wrap">
+              <code class="code">http://localhost:8080</code>
+              <button class="copy-btn" onclick="copyCode(this,'http://localhost:8080')">Copy</button>
+            </div>
+            <div class="note">✅ <strong>You're all set.</strong> MentalBridge runs completely offline from this point.</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </div>
 
 <!-- HELPLINES -->
-<div class="section">
+<div class="section" id="helplines">
+  <div class="section-tag">Crisis support</div>
   <h2>Indian Mental Health Helplines</h2>
-  <p>MentalBridge surfaces these helplines automatically when crisis signals are detected.</p>
+  <p>MentalBridge automatically surfaces these helplines when crisis signals are detected in conversation.</p>
   <div class="helplines">
-    <div class="helpline"><h4>iCall</h4><p>📞 9152987821</p><p style="font-size:12px;color:#444;margin-top:4px;">Mon–Sat 8am–10pm</p></div>
-    <div class="helpline"><h4>Vandrevala Foundation</h4><p>📞 1860-2662-345</p><p style="font-size:12px;color:#444;margin-top:4px;">24 hours · 7 days</p></div>
-    <div class="helpline"><h4>NIMHANS</h4><p>📞 080-46110007</p><p style="font-size:12px;color:#444;margin-top:4px;">Bangalore · National referrals</p></div>
-    <div class="helpline"><h4>Snehi</h4><p>📞 044-24640050</p><p style="font-size:12px;color:#444;margin-top:4px;">Chennai · Tamil speaking</p></div>
+    <div class="helpline">
+      <h4>📞 iCall</h4>
+      <div class="phone">9152987821</div>
+      <div class="hours">Mon–Sat · 8am to 10pm</div>
+    </div>
+    <div class="helpline">
+      <h4>🆘 Vandrevala Foundation</h4>
+      <div class="phone">1860-2662-345</div>
+      <div class="hours">24 hours · 7 days a week</div>
+    </div>
+    <div class="helpline">
+      <h4>🏥 NIMHANS</h4>
+      <div class="phone">080-46110007</div>
+      <div class="hours">Bangalore · National referrals</div>
+    </div>
+    <div class="helpline">
+      <h4>💬 Snehi</h4>
+      <div class="phone">044-24640050</div>
+      <div class="hours">Chennai · Tamil speaking counsellors</div>
+    </div>
   </div>
-  <div class="crisis-note">
-    <h4>⚠️ Important</h4>
-    <p>MentalBridge is not a substitute for professional mental health care. If you are in crisis, please call iCall at 9152987821 immediately.</p>
+  <div class="crisis-card">
+    <div class="ci">⚠️</div>
+    <div>
+      <h4>Important Disclaimer</h4>
+      <p>MentalBridge is not a substitute for professional mental health care. It is a first-aid companion designed to provide support and guide you toward professional help. If you are in immediate danger, please call iCall at 9152987821 or go to your nearest hospital.</p>
+    </div>
   </div>
 </div>
 
-<!-- TECH STACK -->
-<div class="section" style="background:#f0efe9;max-width:100%;padding:64px 24px;">
-<div style="max-width:900px;margin:0 auto;">
-  <h2>Technology</h2>
-  <p>Built with open source tools — fully verifiable and reproducible.</p>
-  <div class="tech">
-    <span class="tech-badge">🤖 Gemma 4 E2B</span>
-    <span class="tech-badge">🦙 Ollama</span>
-    <span class="tech-badge">🦥 Unsloth fine-tuning</span>
-    <span class="tech-badge">HTML / CSS / JavaScript</span>
-    <span class="tech-badge">Wave physics (Verlet integration)</span>
-    <span class="tech-badge">Web Speech API</span>
+<!-- TECH -->
+<div class="section" id="tech" style="background:var(--surface);max-width:100%;padding:80px 24px;">
+<div style="max-width:960px;margin:0 auto;">
+  <div class="section-tag">Under the hood</div>
+  <h2>Built with open technology</h2>
+  <p>Every component is open source and publicly verifiable. No black boxes.</p>
+  <div class="tech-grid">
+    <div class="tech-card">
+      <div class="tech-icon">🤖</div>
+      <div><div class="tech-name">Gemma 4 E2B</div><div class="tech-desc">Google DeepMind · Local inference</div></div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon">🦙</div>
+      <div><div class="tech-name">Ollama</div><div class="tech-desc">On-device model serving</div></div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon">🦥</div>
+      <div><div class="tech-name">Unsloth</div><div class="tech-desc">Fine-tuning on Indian data</div></div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon">🌊</div>
+      <div><div class="tech-name">Wave Physics</div><div class="tech-desc">Verlet integration · Real ripples</div></div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon">🗣️</div>
+      <div><div class="tech-name">Web Speech API</div><div class="tech-desc">Multilingual voice support</div></div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon">📦</div>
+      <div><div class="tech-name">Pure HTML/JS</div><div class="tech-desc">No framework · No dependencies</div></div>
+    </div>
   </div>
-  <p style="margin-top:24px;">Fine-tuned LoRA adapter trained on 192 Indian mental health conversations. Published openly on HuggingFace.</p>
-  <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap;">
-    <a href="https://github.com/vishnu-prasad-g-s/MentalBridge" style="background:#111;color:white;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px;">GitHub Repository</a>
-    <a href="https://huggingface.co/vishnuprasadgs/mentalbridge-gemma4-E2B-finetuned" style="background:#ff9d00;color:white;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px;">HuggingFace Model</a>
+
+  <div class="links-row" style="margin-top:40px;">
+    <a href="https://github.com/vishnu-prasad-g-s/MentalBridge" class="link-card" target="_blank">
+      <div class="lc-icon">💻</div>
+      <div class="lc-name">GitHub Repository</div>
+      <div class="lc-desc">Complete source code</div>
+    </a>
+    <a href="https://huggingface.co/vishnuprasadgs/mentalbridge-gemma4-E2B-finetuned" class="link-card" target="_blank">
+      <div class="lc-icon">🤗</div>
+      <div class="lc-name">HuggingFace Model</div>
+      <div class="lc-desc">Fine-tuned Gemma 4 adapter</div>
+    </a>
+    <a href="https://www.kaggle.com" class="link-card" target="_blank">
+      <div class="lc-icon">📓</div>
+      <div class="lc-name">Kaggle Notebook</div>
+      <div class="lc-desc">Fine-tuning code and results</div>
+    </a>
   </div>
 </div>
 </div>
 
 <!-- FOOTER -->
 <div class="footer">
-  <p>MentalBridge · Built for the Gemma 4 Good Hackathon 2026</p>
-  <p style="margin-top:8px;">Made with care in Chennai, India 🇮🇳</p>
-  <p style="margin-top:8px;"><a href="https://github.com/vishnu-prasad-g-s/MentalBridge">GitHub</a> · <a href="https://huggingface.co/vishnuprasadgs/mentalbridge-gemma4-E2B-finetuned">HuggingFace</a></p>
+  <div class="fl">
+    <a href="https://github.com/vishnu-prasad-g-s/MentalBridge">GitHub</a>
+    <a href="https://huggingface.co/vishnuprasadgs/mentalbridge-gemma4-E2B-finetuned">HuggingFace</a>
+    <a href="https://ollama.com">Ollama</a>
+    <a href="tel:9152987821">iCall: 9152987821</a>
+  </div>
+  <p>MentalBridge · Built for the <strong style="color:#58a6ff;">Gemma 4 Good Hackathon 2026</strong></p>
+  <p style="margin-top:6px;">Made with care in Chennai, India <span class="flag">🇮🇳</span></p>
+  <p style="margin-top:12px;font-size:12px;opacity:.6;">MentalBridge is not a substitute for professional mental health care.</p>
 </div>
 
+<script>
+function switchOS(os, btn) {
+  document.querySelectorAll('.os-tab').forEach(t => t.classList.remove('active'))
+  document.querySelectorAll('.os-panel').forEach(p => p.classList.remove('active'))
+  btn.classList.add('active')
+  document.getElementById('os-' + os).classList.add('active')
+}
+
+function copyCode(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!'
+    btn.style.color = '#7ee787'
+    setTimeout(() => { btn.textContent = 'Copy'; btn.style.color = '' }, 2000)
+  })
+}
+</script>
 </body>
 </html>
